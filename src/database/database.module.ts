@@ -1,17 +1,14 @@
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Module} from "@nestjs/common";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmConfigService } from './database.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot({
-            type: 'mysql',
-            host: 'owu.linkpc.net/',
-            port: 3306,
-            username: 'castor',
-            password: 'castor',
-            database: 'castor',
-            entities: [],
-            synchronize: true,
+        TypeOrmModule.forRootAsync({
+            useClass: TypeOrmConfigService,
+            imports: [ConfigModule],
+            inject: [ConfigService],
         }),
     ],
 })
