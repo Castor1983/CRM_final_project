@@ -5,11 +5,13 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post, Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import {SkipAuth} from "../../decorators/skip-auth.decorator";
+import {PaginationDto} from "./dto/pagination-order.dto";
 
 @Controller('orders')
 export class OrdersController {
@@ -19,10 +21,10 @@ export class OrdersController {
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto);
   }
-
+  @SkipAuth()
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.ordersService.findAll(paginationDto);
   }
 
   @Get(':id')

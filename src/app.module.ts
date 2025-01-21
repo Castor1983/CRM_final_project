@@ -5,6 +5,8 @@ import configuration from "./configs/configuration";
 import {RepositoryModule} from "./modules/repositories/repository.module";
 import {RedisModule} from "./modules/redis/redis.module";
 import {AuthModule} from "./modules/auth/auth.module";
+import {ManagersModule} from "./modules/managers/managers.module";
+import {OrdersModule} from "./modules/orders/orders.module";
 
 
 @Module({
@@ -16,7 +18,9 @@ import {AuthModule} from "./modules/auth/auth.module";
         DatabaseModule,
         RepositoryModule,
         RedisModule,
-        AuthModule],
+        AuthModule,
+        ManagersModule,
+        OrdersModule],
     controllers: [],
     providers: [],
 })
