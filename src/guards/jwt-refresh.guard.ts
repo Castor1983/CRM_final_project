@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
-import { UserRepository } from '../../repository/services/user.repository';
-import { UserMapper } from '../../users/user.mapper';
-import { TokenType } from '../enums/token-type.enum';
-import { TokenService } from '../services/token.service';
+import { TokenType } from '../database/enums/token-type.enum';
+import { TokenService } from '../modules/auth/token.service';
+import {ManagerRepository} from "../modules/repositories/services/manager.repository";
+import {RefreshTokenRepository} from "../modules/repositories/services/refresh-token.repository";
+import {ManagerMapper} from "../modules/managers/manager.mapper";
 
 @Injectable()
 export class JwtRefreshGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class JwtRefreshGuard implements CanActivate {
     private readonly reflector: Reflector,
     private readonly tokenService: TokenService,
     private readonly refreshTokenRepository: RefreshTokenRepository,
-    private readonly userRepository: UserRepository,
+    private readonly managerRepository: ManagerRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -41,13 +41,13 @@ export class JwtRefreshGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userRepository.findOneBy({
-      id: payload.userId,
+    const manager = await this.managerRepository.findOneBy({
+      id: +payload.managerId,
     });
-    if (!user) {
+    if (!manager) {
       throw new UnauthorizedException();
     }
-    request.user = UserMapper.toIUserData(user, payload);
+    request.manager = ManagerMapper.toIManagerData(manager, payload);
     return true;
   }
 }

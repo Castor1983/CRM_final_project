@@ -1,7 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 
 import { ManagerRepository } from './services/manager.repository';
-const repositories = [ManagerRepository];
+import {OrderRepository} from "./services/order.repository";
+import {RefreshTokenRepository} from "./services/refresh-token.repository";
+const repositories = [ManagerRepository, OrderRepository, RefreshTokenRepository];
 
 @Global()
 @Module({

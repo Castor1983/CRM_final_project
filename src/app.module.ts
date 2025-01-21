@@ -3,6 +3,7 @@ import {DatabaseModule} from "./database/database.module";
 import {ConfigModule} from "@nestjs/config";
 import configuration from "./configs/configuration";
 import {RepositoryModule} from "./modules/repositories/repository.module";
+import {RedisModule} from "./modules/redis/redis.module";
 
 
 @Module({
@@ -11,7 +12,7 @@ import {RepositoryModule} from "./modules/repositories/repository.module";
             load: [configuration],
             isGlobal: true,
         }),
-        DatabaseModule, RepositoryModule],
+        DatabaseModule, RepositoryModule, RedisModule],
     controllers: [],
     providers: [],
 })

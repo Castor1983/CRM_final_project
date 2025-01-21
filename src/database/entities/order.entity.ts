@@ -9,8 +9,9 @@ import { CourseEnum } from '../enums/course.enum';
 import { CourseFormatEnum } from '../enums/courseFormat.enum';
 import { CourseTypeEnum } from '../enums/courseType.enum';
 import { StatusEnum } from '../enums/status.enum';
+import {TableNameEnum} from "../enums/table-name.enum";
 
-@Entity('orders')
+@Entity(TableNameEnum.ORDERS)
 export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;

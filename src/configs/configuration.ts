@@ -18,6 +18,11 @@ export default (): Config => ({
     password: process.env.MYSQL_PASSWORD,
     dbName: process.env.MYSQL_DB,
   },
+  redis: {
+    port: Number(process.env.REDIS_PORT),
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+  },
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET,
     accessExpiresIn: Number(process.env.JWT_ACCESS_EXPIRES_IN),

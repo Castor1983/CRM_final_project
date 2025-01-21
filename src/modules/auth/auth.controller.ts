@@ -15,7 +15,7 @@ import { CurrentUser } from '../../decorators/current-user.decorator';
 import { JwtRefreshGuard } from 'src/guards/jwt-refresh.guard';
 import { AuthResDto } from './dto/auth.res.dto';
 import { TokenPairResDto } from './dto/token-pair.res.dto';
-import { IUserData } from 'src/interfaces/user-data.interface';
+import {IManagerData, } from 'src/interfaces/manager-data.interface';
 
 
 @ApiTags('Login')
@@ -34,15 +34,15 @@ export class AuthController {
   @SkipAuth()
   @Post('refresh')
   public async refresh(
-      @CurrentUser() userData: IUserData,
+      @CurrentUser() managerData: IManagerData,
   ): Promise<TokenPairResDto> {
-    return await this.authService.refresh(userData);
+    return await this.authService.refresh(managerData);
   }
 
   @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('sign-out')
-  public async signOut(@CurrentUser() userData: IUserData): Promise<void> {
-    await this.authService.signOut(userData);
+  public async signOut(@CurrentUser() managerData: IManagerData): Promise<void> {
+    await this.authService.signOut(managerData);
   }
 }

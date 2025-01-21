@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { ManagerReqDto } from './dto/create-manager.dto';
 import { UpdateManagerDto } from './dto/update-manager.dto';
 import { ManagerEntity } from 'src/database/entities/manager.entity';
-import { ManagerRepository } from '../repository/services/manager.repository';
+import { ManagerRepository } from '../repositories/services/manager.repository';
 
 @Injectable()
 export class ManagersService {

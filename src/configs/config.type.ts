@@ -3,6 +3,7 @@ export type Config = {
   admin: AdminConfig;
   mysql: MysqlConfig;
   jwt: JwtConfig;
+  redis: RedisConfig;
 };
 
 export type AppConfig = {
@@ -28,4 +29,10 @@ export type JwtConfig = {
   accessExpiresIn: number;
   refreshSecret: string;
   refreshExpiresIn: number;
+};
+
+export type RedisConfig = {
+  port: number;
+  host: string;
+  password: string;
 };

@@ -1,7 +1,9 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {ManagerRole} from "../enums/managerRole.enum";
+import {TableNameEnum} from "../enums/table-name.enum";
+import {RefreshTokenEntity} from "./refresh-token.entity";
 
-@Entity('managers')
+@Entity(TableNameEnum.MANAGERS)
 export class ManagerEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -26,4 +28,7 @@ export class ManagerEntity {
 
     @Column({ type: 'date', nullable: true })
     last_login: Date | null;
+
+    @OneToMany(() => RefreshTokenEntity, (entity) => entity.manager)
+    refreshTokens?: RefreshTokenEntity[];
 }

@@ -1,7 +1,7 @@
-import { PublicUserResDto } from '../../../users/dto/res/public-user.res.dto';
 import { TokenPairResDto } from './token-pair.res.dto';
+import {ManagerResDto} from "../../managers/dto/manager.res.dto";
 
 export class AuthResDto {
   tokens: TokenPairResDto;
-  user: PublicUserResDto;
+  manager: ManagerResDto;
 }
