@@ -15,7 +15,7 @@ export class RefreshTokenEntity extends CreateUpdateModel {
   deviceId: string;
 
   @Column()
-  manager_id: string;
+  managerId: string;
   @ManyToOne(() => ManagerEntity, (entity) => entity.refreshTokens, {
     onDelete: 'CASCADE',
   })

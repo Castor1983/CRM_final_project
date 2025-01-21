@@ -18,8 +18,8 @@ import { TokenPairResDto } from './dto/token-pair.res.dto';
 import {IManagerData, } from 'src/interfaces/manager-data.interface';
 
 
-@ApiTags('Login')
-@Controller('login')
+@ApiTags('Auth')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

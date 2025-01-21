@@ -37,7 +37,7 @@ export class AuthService {
 
     await Promise.all([
       this.refreshTokenRepository.delete({
-        manager_id: manager.id.toString(),
+        managerId: manager.id.toString(),
         deviceId: dto.deviceId,
       }),
       this.authCacheService.deleteToken(manager.id.toString(), dto.deviceId),
@@ -47,7 +47,7 @@ export class AuthService {
       this.refreshTokenRepository.save({
         deviceId: dto.deviceId,
         refreshToken: tokens.refreshToken,
-        manger_id: manager.id,
+        managerId: manager.id.toString(),
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
@@ -62,7 +62,7 @@ export class AuthService {
     await Promise.all([
       this.refreshTokenRepository.delete({
         deviceId: managerData.deviceId,
-        manager_id: managerData.managerId,
+        managerId: managerData.managerId,
       }),
       this.authCacheService.deleteToken(managerData.managerId, managerData.deviceId),
     ]);
@@ -91,7 +91,7 @@ export class AuthService {
     await Promise.all([
       this.refreshTokenRepository.delete({
         deviceId: managerData.deviceId,
-        manager_id: managerData.managerId,
+        managerId: managerData.managerId,
       }),
       this.authCacheService.deleteToken(managerData.managerId, managerData.deviceId),
     ]);
