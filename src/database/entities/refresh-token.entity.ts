@@ -4,14 +4,14 @@ import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from '../models/create-update.model'
 import { ManagerEntity } from './manager.entity';
 
-// @Index(['refreshToken', 'deviceId'])
+//@Index(['refreshToken', 'deviceId'], {unique: true})
 @Entity(TableNameEnum.REFRESH_TOKENS)
 export class RefreshTokenEntity extends CreateUpdateModel {
-  @Column('text')
+
+  @Column('varchar')
   refreshToken: string;
 
-  @Index()
-  @Column('text')
+  @Column('varchar', {length: 255})
   deviceId: string;
 
   @Column()

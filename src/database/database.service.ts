@@ -3,6 +3,8 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import {ManagerEntity} from "./entities/manager.entity";
 import {MysqlConfig} from "../configs/config.type";
+import {OrderEntity} from "./entities/order.entity";
+import {RefreshTokenEntity} from "./entities/refresh-token.entity";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -16,7 +18,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             username: msqlConfig.user,
             password: msqlConfig.password,
             database: msqlConfig.dbName,
-            entities: [ManagerEntity],
+            entities: [ManagerEntity, OrderEntity, RefreshTokenEntity],
             // migrations
             synchronize: true,
         };

@@ -16,45 +16,45 @@ export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('text')
+  @Column('varchar', { length: 25, nullable: true, default: null })
   name: string;
 
-  @Column('text')
+  @Column('varchar', { length: 25, nullable: true, default: null })
   surname: string;
 
-  @Column('varchar', { unique: true, length: 255 })
+  @Column('varchar', { length: 100, nullable: true, default: null })
   email: string;
 
-  @Column('text')
+  @Column('varchar', { length: 10, nullable: true, default: null })
   phone: string;
 
-  @Column('int')
+  @Column('int', { nullable: true, default: null })
   age: number;
 
-  @Column({ type: 'enum', enum: CourseEnum })
+  @Column({ type: 'enum', enum: CourseEnum, nullable: true, default: null })
   course: CourseEnum;
 
-  @Column({ type: 'enum', enum: CourseFormatEnum })
+  @Column({ type: 'enum', enum: CourseFormatEnum, nullable: true, default: null })
   course_format: CourseFormatEnum;
 
-  @Column({ type: 'enum', enum: CourseTypeEnum })
+  @Column({ type: 'enum', enum: CourseTypeEnum, nullable: true, default: null })
   course_type: CourseTypeEnum;
 
-  @Column({ type: 'enum', enum: StatusEnum })
+  @Column({ type: 'enum', enum: StatusEnum, nullable: true, default: null })
   status: StatusEnum;
 
-  @Column('int')
+  @Column('int', {nullable: true, default: null})
   sum: number;
 
-  @Column('int')
+  @Column('int', {nullable: true, default: null})
   alreadyPaid: number;
 
-  @Column('text')
-  group: string;
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  msg: string;
 
-  @Column('text')
-  manager: string;
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  utm: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({nullable: true, default: null})
   created_at: Date;
 }

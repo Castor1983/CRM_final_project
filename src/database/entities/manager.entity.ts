@@ -14,7 +14,7 @@ export class ManagerEntity {
     @Column('text')
     surname: string;
 
-    @Column('varchar', { unique: true, length: 255 })
+    @Column('varchar', { length: 255 })
     email: string;
 
     @Column('text', { select: false })
