@@ -1,7 +1,6 @@
 import {IsIn, IsInt, IsOptional, IsString, Min} from 'class-validator';
 import { Type } from 'class-transformer';
 import {OrderColumnsNameEnum} from "../../../database/enums/orderColumnsName.enum";
-import {DescAscEnum} from "../../../database/enums/desc-asc.enum";
 
 export class PaginationDto {
     @IsOptional()
