@@ -22,7 +22,6 @@ async function bootstrap() {
         .setTitle('CRM programming school')
         .setDescription('The may-2024 API description')
         .setVersion('1.0')
-        .addTag('okten')
         .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/doc', app, documentFactory, {
