@@ -43,7 +43,6 @@ export class JwtAccessGuard implements CanActivate {
 
     const isAccessTokenExist = await this.authCacheService.isAccessTokenExist(
       payload.managerId,
-      payload.deviceId,
       accessToken,
     );
     if (!isAccessTokenExist) {

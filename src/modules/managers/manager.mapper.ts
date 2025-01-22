@@ -9,7 +9,6 @@ export class ManagerMapper {
   public static toIManagerData(manager: ManagerEntity, payload: IJwtPayload): IManagerData {
     return {
       managerId: payload.managerId,
-      deviceId: payload.deviceId,
       email: manager.email,
       role: ManagerRole.MANAGER
     };

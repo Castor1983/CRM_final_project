@@ -18,9 +18,8 @@ export class AuthCacheService {
   public async saveToken(
     token: string,
     managerId: string,
-    deviceId: string,
   ): Promise<void> {
-    const key = this.getKey(managerId, deviceId);
+    const key = this.getKey(managerId);
 
     await this.redisService.deleteByKey(key);
     await this.redisService.addOneToSet(key, token);
@@ -29,20 +28,19 @@ export class AuthCacheService {
 
   public async isAccessTokenExist(
     managerId: string,
-    deviceId: string,
     token: string,
   ): Promise<boolean> {
-    const key = this.getKey(managerId, deviceId);
+    const key = this.getKey(managerId);
     const set = await this.redisService.sMembers(key);
     return set.includes(token);
   }
 
-  public async deleteToken(managerId: string, deviceId: string): Promise<void> {
-    const key = this.getKey(managerId, deviceId);
+  public async deleteToken(managerId: string): Promise<void> {
+    const key = this.getKey(managerId);
     await this.redisService.deleteByKey(key);
   }
 
-  private getKey(managerId: string, deviceId: string): string {
-    return `ACCESS_TOKEN:${managerId}:${deviceId}`;
+  private getKey(managerId: string): string {
+    return `ACCESS_TOKEN:${managerId}`;
   }
 }

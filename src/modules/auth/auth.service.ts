@@ -7,6 +7,7 @@ import {TokenService} from "./token.service";
 import {RefreshTokenRepository} from "../repositories/services/refresh-token.repository";
 import {IManagerData} from "../../interfaces/manager-data.interface";
 import {AuthCacheService} from "./auth-cache.service";
+import {AuthResDto} from "./dto/auth.res.dto";
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class AuthService {
       private readonly authCacheService: AuthCacheService,
   ) {}
 
-    public async signIn(dto: SignInReqDto): Promise<any> {
+    public async signIn(dto: SignInReqDto): Promise<AuthResDto> {
     const manager = await this.managerRepository.findOne({
       where: { email: dto.email },
       select: { id: true, password: true },
@@ -32,27 +33,23 @@ export class AuthService {
     }
     const tokens = await this.tokenService.generateAuthTokens({
       managerId: manager.id.toString(),
-      deviceId: dto.deviceId,
     });
 
     await Promise.all([
       this.refreshTokenRepository.delete({
         managerId: manager.id.toString(),
-        deviceId: dto.deviceId,
       }),
-      this.authCacheService.deleteToken(manager.id.toString(), dto.deviceId),
+      this.authCacheService.deleteToken(manager.id.toString()),
     ]);
 
     await Promise.all([
       this.refreshTokenRepository.save({
-        deviceId: dto.deviceId,
         refreshToken: tokens.refreshToken,
         managerId: manager.id.toString(),
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
           manager.id.toString(),
-          dto.deviceId,
       ),
     ]);
     const managerEntity = await this.managerRepository.findOneBy({ id: manager.id });
@@ -61,27 +58,23 @@ export class AuthService {
   public async refresh(managerData: IManagerData): Promise<TokenPairResDto> {
     await Promise.all([
       this.refreshTokenRepository.delete({
-        deviceId: managerData.deviceId,
         managerId: managerData.managerId,
       }),
-      this.authCacheService.deleteToken(managerData.managerId, managerData.deviceId),
+      this.authCacheService.deleteToken(managerData.managerId),
     ]);
 
     const tokens = await this.tokenService.generateAuthTokens({
       managerId: managerData.managerId,
-      deviceId: managerData.deviceId,
     });
 
     await Promise.all([
       this.refreshTokenRepository.save({
-        deviceId: managerData.deviceId,
         refreshToken: tokens.refreshToken,
         manager_id: managerData.managerId,
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
           managerData.managerId,
-          managerData.deviceId,
       ),
     ]);
 
@@ -90,10 +83,9 @@ export class AuthService {
   public async signOut(managerData: IManagerData): Promise<void> {
     await Promise.all([
       this.refreshTokenRepository.delete({
-        deviceId: managerData.deviceId,
         managerId: managerData.managerId,
       }),
-      this.authCacheService.deleteToken(managerData.managerId, managerData.deviceId),
+      this.authCacheService.deleteToken(managerData.managerId),
     ]);
   }
 }

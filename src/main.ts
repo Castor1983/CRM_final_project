@@ -25,7 +25,12 @@ async function bootstrap() {
         .addTag('okten')
         .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/doc', app, documentFactory);
+    SwaggerModule.setup('api/doc', app, documentFactory, {
+        swaggerOptions: {
+            persistAuthorization: true,
+            defaultModelsExpandDepth: 7
+        }
+    });
 
     await app.listen(appConfig.port, async () => {
         const managerRepository = app.get<ManagerRepository>(ManagerRepository);
