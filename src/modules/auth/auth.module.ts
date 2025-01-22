@@ -16,5 +16,6 @@ import {JwtAccessGuard} from "../../guards/jwt-access.guard";
         provide: APP_GUARD,
         useClass: JwtAccessGuard,
     },AuthService, TokenService, AuthCacheService],
+    exports: [TokenService, AuthCacheService],
 })
 export class AuthModule {}

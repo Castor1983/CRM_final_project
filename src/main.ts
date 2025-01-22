@@ -21,7 +21,14 @@ async function bootstrap() {
     const config = new DocumentBuilder()
         .setTitle('CRM programming school')
         .setDescription('The may-2024 API description')
-        .setVersion('1.0')
+        .setVersion('1.0').addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+            },
+            'access-token',
+        )
         .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/doc', app, documentFactory, {
