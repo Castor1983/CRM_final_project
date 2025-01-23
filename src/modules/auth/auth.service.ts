@@ -55,6 +55,7 @@ export class AuthService {
     const managerEntity = await this.managerRepository.findOneBy({ id: manager.id });
     return { manager: managerEntity, tokens };
   }
+
   public async refresh(managerData: IManagerData): Promise<TokenPairResDto> {
     await Promise.all([
       this.refreshTokenRepository.delete({
@@ -70,7 +71,7 @@ export class AuthService {
     await Promise.all([
       this.refreshTokenRepository.save({
         refreshToken: tokens.refreshToken,
-        manager_id: managerData.managerId,
+        managerId: managerData.managerId,
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
