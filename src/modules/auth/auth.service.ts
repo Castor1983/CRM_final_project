@@ -33,6 +33,7 @@ export class AuthService {
     }
     const tokens = await this.tokenService.generateAuthTokens({
       managerId: manager.id.toString(),
+      role: manager.role
     });
 
     await Promise.all([
@@ -46,12 +47,15 @@ export class AuthService {
       this.refreshTokenRepository.save({
         refreshToken: tokens.refreshToken,
         managerId: manager.id.toString(),
+        role: manager.role
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
           manager.id.toString(),
       ),
     ]);
+    manager.last_login = new Date();
+      await this.managerRepository.save(manager);
     const managerEntity = await this.managerRepository.findOneBy({ id: manager.id });
     return { manager: managerEntity, tokens };
   }
@@ -66,12 +70,14 @@ export class AuthService {
 
     const tokens = await this.tokenService.generateAuthTokens({
       managerId: managerData.managerId,
+      role: managerData.role
     });
 
     await Promise.all([
       this.refreshTokenRepository.save({
         refreshToken: tokens.refreshToken,
         managerId: managerData.managerId,
+        role: managerData.role
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
