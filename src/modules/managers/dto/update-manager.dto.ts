@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { ManagerReqDto } from './create-manager.dto';
+import {BaseManagerDto} from "./base-manager.dto";
 
-export class UpdateManagerDto extends PartialType(ManagerReqDto) {}
+export class UpdateManagerDto extends PartialType(BaseManagerDto) {}

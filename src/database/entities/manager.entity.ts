@@ -29,6 +29,9 @@ export class ManagerEntity {
     @Column({ type: 'date', nullable: true })
     last_login: Date | null;
 
+    @Column('boolean', { default: false })
+    is_banned: boolean
+
     @OneToMany(() => RefreshTokenEntity, (entity) => entity.manager)
     refreshTokens?: RefreshTokenEntity[];
 }
