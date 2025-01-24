@@ -1,8 +1,9 @@
 import { PickType } from '@nestjs/swagger';
+import {BaseManagerDto} from "../../managers/dto/base-manager.dto";
 
-import { ManagerReqDto } from 'src/modules/managers/dto/create-manager.dto';
 
-export class SignInReqDto extends PickType(ManagerReqDto, [
+
+export class SignInReqDto extends PickType(BaseManagerDto, [
   'email',
   'password',
 ]) {}

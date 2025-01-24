@@ -1,20 +1,22 @@
 import {
   Body,
   Controller,
-  Post,
+  Post, UseGuards,
 } from '@nestjs/common';
 import { ManagersService } from './managers.service';
-import { ManagerReqDto } from './dto/create-manager.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {JwtAccessGuard} from "../../guards/jwt-access.guard";
+import {ManagerCreateDto} from "./dto/create-manager.dto";
 
 @ApiTags('Managers')
 @Controller('managers')
 export class ManagersController {
   constructor(private readonly managersService: ManagersService) {}
-
+  @ApiBearerAuth()
   @Post()
-  create(@Body() managerReqDto: ManagerReqDto) {
-    return this.managersService.create(managerReqDto);
+  @UseGuards(JwtAccessGuard)
+  create(@Body() dto: ManagerCreateDto) {
+    return this.managersService.create(dto);
   }
 
 }
