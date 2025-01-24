@@ -5,7 +5,7 @@ import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {AppModule} from "./app.module";
 import {ManagerRole} from "./database/enums/managerRole.enum";
 import {AdminConfig, AppConfig} from "./configs/config.type";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import {ManagerRepository} from "./modules/repositories/services/manager.repository";
 
 async function bootstrap() {

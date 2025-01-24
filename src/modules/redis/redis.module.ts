@@ -13,7 +13,6 @@ const redisProvider: Provider = {
     return new Redis({
       port: redisConfig.port,
       host: redisConfig.host,
-      //password: redisConfig.password,
     });
   },
   inject: [ConfigService],

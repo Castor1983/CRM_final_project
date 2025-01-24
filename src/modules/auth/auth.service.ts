@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { SignInReqDto } from './dto/sign-in.req.dto';
 import { ManagerRepository } from '../repositories/services/manager.repository';
 import { TokenPairResDto } from './dto/token-pair.res.dto';

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 import { ManagerReqDto } from './dto/create-manager.dto';
 import { ManagerEntity } from 'src/database/entities/manager.entity';
