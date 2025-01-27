@@ -1,10 +1,10 @@
 import {
   Body,
-  Controller, Get, HttpCode,
-  Post, Query, Res, UseGuards,
+  Controller,  HttpCode, Param,
+  Post, UseGuards,
 } from '@nestjs/common';
 import { ManagersService } from './managers.service';
-import {ApiBearerAuth, ApiQuery, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {JwtAccessGuard} from "../../guards/jwt-access.guard";
 import {ManagerCreateDto} from "./dto/create-manager.dto";
 import {RolesGuard} from "../../guards/roles.guard";
@@ -27,9 +27,11 @@ export class ManagersController {
     return this.managersService.create(dto);
   }
 
+  @ApiBearerAuth()
+  @Roles(ManagerRole.ADMIN)
   @Post('activate/:managerId')
   @HttpCode(200)
-  async activateManager(@Query() managerId: string) {
+  async activateManager(@Param('managerId') managerId: string) {
     return this.managersService.activate(managerId);
 
   }

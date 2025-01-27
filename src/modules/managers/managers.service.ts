@@ -12,9 +12,8 @@ import {IActivateManager} from "../../interfaces/activate-manager.interface";
 
 @Injectable()
 export class ManagersService {
-
+    private readonly appConfig: AppConfig;
   constructor(
-      private readonly appConfig: AppConfig,
       private readonly managerRepository: ManagerRepository,
       private readonly  tokenService: TokenService,
       private readonly configService: ConfigService<Config>,) {
@@ -40,9 +39,9 @@ if (manager.is_active){
     throw new Error('Manager is active')
 }
 const payload = {managerId: manager.id.toString(), role: manager.role}
-    const token = await this.tokenService.generateActivateToken(payload);
+    const {activateToken} = await this.tokenService.generateActivateToken(payload);
 
-    const activationLink = `http://${this.appConfig.host}:${this.appConfig.port}/activate/${token}`;
+    const activationLink = `http://${this.appConfig.host}:${this.appConfig.port}/activate/${activateToken}`;
 
  clipboard.writeSync(activationLink);
     await this.managerRepository.update(manager.id, {is_active: true} )
