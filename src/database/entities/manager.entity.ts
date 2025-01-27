@@ -14,11 +14,11 @@ export class ManagerEntity {
     @Column('text')
     surname: string;
 
-    @Column('varchar', { length: 255 })
+    @Column('varchar', { length: 255, unique: true })
     email: string;
 
-    @Column('text', { select: false })
-    password: string;
+    @Column('text', { select: false, nullable: true, default: null })
+    password: string ;
 
     @Column('boolean', { default: false })
     is_active: boolean;

@@ -45,4 +45,5 @@ export class AuthController {
   public async signOut(@CurrentUser() managerData: IManagerData): Promise<void> {
     await this.authService.signOut(managerData);
   }
+
 }

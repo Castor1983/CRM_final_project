@@ -29,6 +29,8 @@ export type JwtConfig = {
   accessExpiresIn: number;
   refreshSecret: string;
   refreshExpiresIn: number;
+  activateSecret: string;
+  activateExpiresIn: number;
 };
 
 export type RedisConfig = {

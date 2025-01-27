@@ -6,6 +6,7 @@ import { Config, JwtConfig } from '../../configs/config.type';
 import { TokenType } from '../../database/enums/token-type.enum';
 import { IJwtPayload } from '../../interfaces/jwt-payload.interface';
 import { ITokenPair } from '../../interfaces/token-pair.interface';
+import {ITokenActivate} from "../../interfaces/token-activate.interface";
 
 @Injectable()
 export class TokenService {
@@ -30,7 +31,13 @@ export class TokenService {
 
     return { accessToken, refreshToken };
   }
-
+public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate> {
+    const activateToken = await this.jwtService.signAsync(payload, {
+      secret: this.jwtConfig.accessSecret,
+      expiresIn: this.jwtConfig.accessExpiresIn,
+    })
+  return {activateToken}
+}
   public async verifyToken(
     token: string,
     type: TokenType,
@@ -52,6 +59,9 @@ export class TokenService {
         break;
       case TokenType.REFRESH:
         secret = this.jwtConfig.refreshSecret;
+        break;
+        case TokenType.ACTIVATE:
+        secret = this.jwtConfig.activateSecret;
         break;
       default:
         throw new Error('Unknown token type');
