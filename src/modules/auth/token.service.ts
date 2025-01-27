@@ -38,6 +38,7 @@ public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate
     })
   return {activateToken}
 }
+
   public async verifyToken(
     token: string,
     type: TokenType,

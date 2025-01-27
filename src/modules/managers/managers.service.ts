@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import clipboard from 'clipboardy';
 
 import { ManagerCreateDto } from './dto/create-manager.dto';
 import { ManagerEntity } from 'src/database/entities/manager.entity';
 import { ManagerRepository } from '../repositories/services/manager.repository';
-import {IJwtPayload} from "../../interfaces/jwt-payload.interface";
 import {TokenService} from "../auth/token.service";
 import {ConfigService} from "@nestjs/config/dist/config.service";
 import {AppConfig, Config} from "../../configs/config.type";
 import {IActivateManager} from "../../interfaces/activate-manager.interface";
-import {ITokenActivate} from "../../interfaces/token-activate.interface";
+
 
 @Injectable()
 export class ManagersService {
@@ -31,28 +30,25 @@ try {
 
   }
 
-public async activate(dto: IJwtPayload): Promise<IActivateManager> {
+public async activate(dto: string): Promise<IActivateManager> {
 
-    const token = this.tokenService.generateActivateToken(dto);
+      const manager = await this.managerRepository.findOneBy({id: +dto})
+if(!manager) {
+    throw new Error('Manager not found')
+}
+if (manager.is_active){
+    throw new Error('Manager is active')
+}
+const payload = {managerId: manager.id.toString(), role: manager.role}
+    const token = await this.tokenService.generateActivateToken(payload);
 
     const activationLink = `http://${this.appConfig.host}:${this.appConfig.port}/activate/${token}`;
 
  clipboard.writeSync(activationLink);
-
+    await this.managerRepository.update(manager.id, {is_active: true} )
   return {
     message: 'Activation link has been generated and copied to clipboard',
     activationLink,
   };
-}
-
-public async verify (dto: ITokenActivate) {
-    try {
-        const payload = this.tokenService.verifyToken(dto.activateToken, dto.type);
-
-
-        return res.redirect(`/create-password?userId=${payload.}`);
-    } catch (error) {
-        return res.status(400).json({ message: 'Invalid or expired token' });
-    }
 }
 }
