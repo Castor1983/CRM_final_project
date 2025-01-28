@@ -33,8 +33,8 @@ export class TokenService {
   }
 public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate> {
     const activateToken = await this.jwtService.signAsync(payload, {
-      secret: this.jwtConfig.accessSecret,
-      expiresIn: this.jwtConfig.accessExpiresIn,
+      secret: this.jwtConfig.activateSecret,
+      expiresIn: this.jwtConfig.activateExpiresIn,
     })
   return {activateToken}
 }
@@ -47,6 +47,7 @@ public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate
       return await this.jwtService.verifyAsync(token, {
         secret: this.getSecret(type),
       });
+
     } catch (error) {
       throw new UnauthorizedException('Invalid token', error);
     }

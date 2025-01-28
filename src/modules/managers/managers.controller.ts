@@ -10,17 +10,20 @@ import {ManagerCreateDto} from "./dto/create-manager.dto";
 import {RolesGuard} from "../../guards/roles.guard";
 import {ManagerRole} from "../../database/enums/managerRole.enum";
 import {Roles} from "../../decorators/roles.decorator";
+import {CreatePasswordDto} from "./dto/createPassword.dto";
+import {SkipAuth} from "../../decorators/skip-auth.decorator";
 
 
 
 @ApiTags('Managers')
 @Controller('managers')
-@UseGuards(RolesGuard, JwtAccessGuard)
+
 export class ManagersController {
   constructor(private readonly managersService: ManagersService,
              ) {}
 
   @ApiBearerAuth()
+  @UseGuards(RolesGuard)
   @Post()
   @Roles(ManagerRole.ADMIN)
   create(@Body() dto: ManagerCreateDto) {
@@ -28,12 +31,19 @@ export class ManagersController {
   }
 
   @ApiBearerAuth()
+  @UseGuards(RolesGuard)
   @Roles(ManagerRole.ADMIN)
-  @Post('activate/:managerId')
+  @Post('activate/manager/:managerId')
   @HttpCode(200)
   async activateManager(@Param('managerId') managerId: string) {
     return this.managersService.activate(managerId);
 
   }
+  @SkipAuth()
+  @Post('activate/:activateToken')
+  @HttpCode(200)
+  async createPassword( @Param('activateToken') activateToken: string, @Body() dto: CreatePasswordDto) {
+    return this.managersService.createPassword(activateToken, dto);
 
+  }
 }
