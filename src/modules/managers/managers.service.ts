@@ -113,8 +113,8 @@ public async banManager(managerId: string): Promise<ManagerEntity> {
         manager.is_banned = true;
         return this.managerRepository.save(manager);
 }
-public async isManagerBanned(userId: number): Promise<boolean> {
-        const manager = await this.managerRepository.findOne({ where: { id: userId } });
+public async isManagerBanned(managerId: string): Promise<boolean> {
+        const manager = await this.managerRepository.findOne({ where: { email: managerId } });
         if (!manager) {
             throw new NotFoundException('User not found');
         }
