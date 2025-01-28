@@ -12,7 +12,6 @@ import {CreatePasswordDto} from "./dto/createPassword.dto";
 import {TokenType} from "../../database/enums/token-type.enum";
 import * as bcrypt from "bcryptjs";
 import {PaginationDto} from "../orders/dto/pagination-order.dto";
-import { DESC_ASC} from "../../common/constants";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {ManagerPaginationResDto} from "./dto/manager-pagination.res.dto";
 
