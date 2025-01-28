@@ -9,7 +9,6 @@ import {IManagerData} from "../../interfaces/manager-data.interface";
 import {AuthCacheService} from "./auth-cache.service";
 import {AuthResDto} from "./dto/auth.res.dto";
 
-
 @Injectable()
 export class AuthService {
   constructor(

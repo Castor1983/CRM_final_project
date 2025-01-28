@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, Length, Matches } from 'class-validator';
+import {  IsString, Length, Matches } from 'class-validator';
 
 export class ManagerCreateDto {
-  @IsOptional()
+  @ApiProperty()
   @IsString()
   @Length(3, 50)
-  name?: string;
+  name: string;
 
-  @IsOptional()
+  @ApiProperty()
   @IsString()
   @Length(0, 300)
-  surname?: string;
+  surname: string;
 
   @ApiProperty({ example: 'test@gmail.com' })
   @IsString()

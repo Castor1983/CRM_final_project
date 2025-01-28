@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import clipboard from 'clipboardy';
 
 import {ManagerCreateDto} from './dto/create-manager.dto';
@@ -11,6 +11,10 @@ import {IActivateManager} from "../../interfaces/activate-manager.interface";
 import {CreatePasswordDto} from "./dto/createPassword.dto";
 import {TokenType} from "../../database/enums/token-type.enum";
 import * as bcrypt from "bcryptjs";
+import {PaginationDto} from "../orders/dto/pagination-order.dto";
+import { DESC_ASC} from "../../common/constants";
+import {DescAscEnum} from "../../database/enums/desc-asc.enum";
+import {ManagerPaginationResDto} from "./dto/manager-pagination.res.dto";
 
 
 @Injectable()
@@ -27,20 +31,47 @@ export class ManagersService {
 try {
   return await this.managerRepository.save(dto);
 }catch (e){
-  throw new Error(e)
+    throw new HttpException(
+        `Failed to create manager: ${e.message || e}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,);
 }
 
   }
+    public async getAll(dto: PaginationDto): Promise<ManagerPaginationResDto> {
+        const { page, limit, order } = dto;
+
+        const queryBuilder = this.managerRepository.createQueryBuilder('order');
+        const allowedOrderFields = DESC_ASC
+
+
+        if (order&& !allowedOrderFields.includes(order)){
+            throw new BadRequestException(`Invalid order field: ${order}`);
+        }
+
+            queryBuilder.orderBy({id: DescAscEnum.DESC})
+
+        queryBuilder.skip((page - 1) * limit).take(limit);
+
+        const [data, total] = await queryBuilder.getManyAndCount();
+        const total_pages = Math.ceil(total/limit)
+        if (page > total_pages || page < 1) {
+            throw new BadRequestException('Invalid page number');
+        }
+        const prev_page = page > 1 ? page - 1 : null
+        const next_page = page < total_pages ? page + 1: null;
+
+        return { data, total_pages, prev_page, next_page };
+    }
 
 public async activate(dto: string): Promise<IActivateManager> {
 
       const manager = await this.managerRepository.findOneBy({id: +dto})
 
 if(!manager) {
-    throw new Error('Manager not found')
+    throw new NotFoundException('Manager not found')
 }
 if (manager.is_active){
-    throw new Error('Manager is active')
+    throw new HttpException('Manager is active', HttpStatus.BAD_REQUEST)
 }
 
 const payload = {managerId: manager.id.toString(), role: manager.role}
