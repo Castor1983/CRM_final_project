@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { ManagersService } from './managers.service';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {JwtAccessGuard} from "../../guards/jwt-access.guard";
 import {ManagerCreateDto} from "./dto/create-manager.dto";
 import {RolesGuard} from "../../guards/roles.guard";
 import {ManagerRole} from "../../database/enums/managerRole.enum";
