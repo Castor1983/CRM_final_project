@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller, Get, HttpCode, Param,
+  Controller, Get, HttpCode, Param, Patch,
   Post, Query, UseGuards,
 } from '@nestjs/common';
 import { ManagersService } from './managers.service';
@@ -61,5 +61,21 @@ export class ManagersController {
   async recoveryPassword(@Param('managerId') managerId: string) {
     return this.managersService.recoveryPassword(managerId);
 
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @Roles(ManagerRole.ADMIN)
+  @Patch('ban/:managerId')
+  async banManager(@Param('managerId') managerId: string,) {
+    return this.managersService.banManager(managerId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @Roles(ManagerRole.ADMIN)
+  @Patch('unban/:managerId')
+  async unbanManager(@Param('managerId') managerId: string) {
+    return this.managersService.unbanManager(managerId);
   }
 }

@@ -16,6 +16,7 @@ import { JwtRefreshGuard } from 'src/guards/jwt-refresh.guard';
 import { AuthResDto } from './dto/auth.res.dto';
 import { TokenPairResDto } from './dto/token-pair.res.dto';
 import {IManagerData, } from 'src/interfaces/manager-data.interface';
+import {BanGuard} from "../../guards/banned.guard";
 
 
 @ApiTags('Auth')
@@ -23,6 +24,7 @@ import {IManagerData, } from 'src/interfaces/manager-data.interface';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(BanGuard)
   @SkipAuth()
   @Post('sign-in')
   public async signIn(@Body() dto: SignInReqDto): Promise<AuthResDto> {

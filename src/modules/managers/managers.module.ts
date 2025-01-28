@@ -13,5 +13,6 @@ import {AuthModule} from "../auth/auth.module";
     provide: APP_GUARD,
     useClass: JwtAccessGuard
   },ManagersService],
+  exports: [ManagersService]
 })
 export class ManagersModule {}

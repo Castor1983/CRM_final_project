@@ -38,19 +38,11 @@ try {
 
   }
     public async getAll(dto: PaginationDto): Promise<ManagerPaginationResDto> {
-        const { page, limit, order } = dto;
+        const { page, limit} = dto;
 
         const queryBuilder = this.managerRepository.createQueryBuilder('order');
-        const allowedOrderFields = DESC_ASC
 
-
-        if (order&& !allowedOrderFields.includes(order)){
-            throw new BadRequestException(`Invalid order field: ${order}`);
-        }
-
-            queryBuilder.orderBy({id: DescAscEnum.DESC})
-
-        queryBuilder.skip((page - 1) * limit).take(limit);
+            queryBuilder.orderBy({id: DescAscEnum.DESC}).skip((page - 1) * limit).take(limit);
 
         const [data, total] = await queryBuilder.getManyAndCount();
         const total_pages = Math.ceil(total/limit)
@@ -104,4 +96,29 @@ public async recoveryPassword (dto: string) {
     }
      return await this.activate(dto)
 }
+
+public async unbanManager(managerId: string): Promise<ManagerEntity> {
+        const manager = await this.managerRepository.findOne({ where: { id: +managerId } });
+        if (!manager) {
+            throw new NotFoundException('User not found');
+        }
+        manager.is_banned = false;
+        return this.managerRepository.save(manager);
+}
+
+public async banManager(managerId: string): Promise<ManagerEntity> {
+        const manager = await this.managerRepository.findOne({ where: { id: +managerId } });
+        if (!manager) {
+            throw new NotFoundException('User not found');
+        }
+        manager.is_banned = true;
+        return this.managerRepository.save(manager);
+}
+public async isManagerBanned(userId: number): Promise<boolean> {
+        const manager = await this.managerRepository.findOne({ where: { id: userId } });
+        if (!manager) {
+            throw new NotFoundException('User not found');
+        }
+        return manager.is_banned;
+    }
 }
