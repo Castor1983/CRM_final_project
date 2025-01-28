@@ -96,4 +96,12 @@ public async createPassword (token: string, dto: CreatePasswordDto) {
       }
       return { message: 'Password create is successful'}
 }
+
+public async recoveryPassword (dto: string) {
+     const manager = await this.managerRepository.update(+dto, { is_active: false})
+    if(!manager) {
+        throw new NotFoundException('Manager not found')
+    }
+     return await this.activate(dto)
+}
 }

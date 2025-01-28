@@ -53,4 +53,13 @@ export class ManagersController {
     return this.managersService.createPassword(activateToken, dto);
 
   }
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @Roles(ManagerRole.ADMIN)
+  @Post('deactivate/:managerId')
+  @HttpCode(200)
+  async recoveryPassword(@Param('managerId') managerId: string) {
+    return this.managersService.recoveryPassword(managerId);
+
+  }
 }
