@@ -1,5 +1,4 @@
 import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
-import clipboard from 'clipboardy';
 
 import {ManagerCreateDto} from './dto/create-manager.dto';
 import {ManagerEntity} from 'src/database/entities/manager.entity';
@@ -70,7 +69,6 @@ const payload = {managerId: manager.id.toString(), role: manager.role}
 
     const activationLink = `http://${this.appConfig.host}:${this.appConfig.port}/managers/activate/${activateToken}`;
 
- clipboard.writeSync(activationLink);
   return {
     message: 'Activation link has been generated and copied to clipboard',
     activationLink,

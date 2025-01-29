@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import {MysqlConfig} from "../configs/config.type";
-import {ManagerEntity} from "./entities/manager.entity";
-import {OrderEntity} from "./entities/order.entity";
-import {RefreshTokenEntity} from "./entities/refresh-token.entity";
+import * as path from "node:path";
+
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -19,9 +18,16 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             password: msqlConfig.password,
             database: msqlConfig.dbName,
             entities: [
-                ManagerEntity, OrderEntity, RefreshTokenEntity
+                path.join(
+                    process.cwd(),
+                    'dist',
+                    'src',
+                    'database',
+                    'entities',
+                    '*.entity.js',
+                ),
             ],
-            migrations: [
+            migrations: [ path.join(process.cwd(), 'dist', 'src', 'database', 'migrations', '*.js'),
             ],
             migrationsRun: false,
             synchronize: false,
