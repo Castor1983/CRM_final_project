@@ -32,6 +32,10 @@ export class OrdersService {
     queryBuilder.skip((page - 1) * limit).take(limit);
 
     const [data, total] = await queryBuilder.getManyAndCount();
+    console.log(data)
+    if(!data || data.length === 0) {
+      throw new BadRequestException ( 'Orders not found')
+    }
     const total_pages = Math.ceil(total/limit)
     if (page > total_pages || page < 1) {
       throw new BadRequestException('Invalid page number');

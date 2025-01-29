@@ -82,6 +82,8 @@ public async createPassword (token: string, dto: CreatePasswordDto) {
       if (dto.password === dto.confirmPassword) {
           const hashPassword = await bcrypt.hash(dto.password, 10);
            await this.managerRepository.update(+payload.managerId, {password: hashPassword, is_active: true})
+      } else {
+          throw new BadRequestException ('Password and password confirmation do not match')
       }
       return { message: 'Password create is successful'}
 }
