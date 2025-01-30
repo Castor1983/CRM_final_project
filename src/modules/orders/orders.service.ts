@@ -11,7 +11,7 @@ export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
   public async findAll(paginationDto: PaginationDto): Promise<OrderPaginationResDto> {
-    const { page, limit, sort, order,  /*name, surname, email, phone, age*/ } = paginationDto;
+    const { page, limit, sort, order,  name, surname, email, phone, age } = paginationDto;
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
   const allowedSortFields = COLUMNS_NAME.orderColumnsName
     const allowedOrderFields = DESC_ASC
@@ -22,7 +22,7 @@ export class OrdersService {
     if (order&& !allowedOrderFields.includes(order)){
       throw new BadRequestException(`Invalid order field: ${order}`);
     }
-   /* if (name) {
+    if (name) {
       queryBuilder.andWhere('order.name LIKE :name', { name: `%${name}%` });
     }
     if (surname) {
@@ -36,7 +36,7 @@ export class OrdersService {
     }
     if (age) {
       queryBuilder.andWhere('order.age = :age', { age });
-    }*/
+    }
 
     if (sort && order) {
       queryBuilder.orderBy(`order.${sort}`, order);

@@ -14,15 +14,15 @@ import {JwtAccessGuard} from "../../guards/jwt-access.guard";
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth()
   @ApiQuery({ name: 'page', required: true, type: Number, description: 'Page number'} )
   @ApiQuery({ name: 'sort', required: false, enum: OrderColumnsNameEnum, description: 'Sort by columns name'} )
   @ApiQuery({ name: 'order', required: false, enum: DescAscEnum, description: 'ASC/DESC'} )
-  /*@ApiQuery({ name: 'name', required: false, type: 'string', description: 'Filter by name', nullable: true  })
-  @ApiQuery({ name: 'surname', required: false, type: 'string', description: 'Filter by surname', nullable: true  })
-  @ApiQuery({ name: 'email', required: false, type: 'string', description: 'Filter by email', nullable: true  })
-  @ApiQuery({ name: 'phone', required: false, type: 'string', description: 'Filter by phone', nullable: true  })
-  @ApiQuery({ name: 'age', required: false, type: 'number', description: 'Filter by age', nullable: true  })*/
+  @ApiQuery({ name: 'name', required: false, type: String, description: 'Filter by name'} )
+  @ApiQuery({ name: 'surname', required: false, type: String, description: 'Filter by surname'} )
+  @ApiQuery({ name: 'email', required: false, type: String, description: 'Filter by email'} )
+  @ApiQuery({ name: 'phone', required: false, type: String, description: 'Filter by phone'} )
+  @ApiQuery({ name: 'age', required: false, type: Number, description: 'Filter by age'} )
   @UseGuards(JwtAccessGuard)
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {

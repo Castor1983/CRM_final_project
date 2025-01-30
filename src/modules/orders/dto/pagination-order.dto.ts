@@ -1,4 +1,4 @@
-import {IsIn, IsInt,  IsOptional, IsString, Min} from 'class-validator';
+import {IsEnum, IsIn, IsInt, IsOptional, IsString, Min} from 'class-validator';
 import { Type } from 'class-transformer';
 import {OrderColumnsNameEnum} from "../../../database/enums/orderColumnsName.enum";
 
@@ -17,10 +17,10 @@ export class PaginationDto {
     limit?: number = 25;
 
     @IsOptional()
-    @IsString()
+    @IsEnum(OrderColumnsNameEnum)
     sort?: OrderColumnsNameEnum;
 
-   /* @IsOptional()
+    @IsOptional()
     @IsString()
     name?: string
 
@@ -39,7 +39,7 @@ export class PaginationDto {
 
     @IsOptional()
     @IsString()
-    email?: string*/
+    email?: string
 
     @IsOptional()
     @IsIn(['ASC', 'DESC'])
