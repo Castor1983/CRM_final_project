@@ -1,4 +1,10 @@
-import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import {
+    BadRequestException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotFoundException
+} from '@nestjs/common';
 
 import {ManagerCreateDto} from './dto/create-manager.dto';
 import {ManagerEntity} from 'src/database/entities/manager.entity';
@@ -13,6 +19,7 @@ import * as bcrypt from "bcryptjs";
 import {PaginationDto} from "../orders/dto/pagination-order.dto";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {ManagerPaginationResDto} from "./dto/manager-pagination.res.dto";
+import {OrdersService} from "../orders/orders.service";
 
 
 @Injectable()
@@ -21,6 +28,7 @@ export class ManagersService {
   constructor(
       private readonly managerRepository: ManagerRepository,
       private readonly  tokenService: TokenService,
+      private readonly ordersService: OrdersService,
       private readonly configService: ConfigService<Config>,) {
     this.appConfig = configService.get<AppConfig>('app')
   }
@@ -38,11 +46,12 @@ try {
     public async getAll(dto: PaginationDto): Promise<ManagerPaginationResDto> {
         const { page, limit} = dto;
 
-        const queryBuilder = this.managerRepository.createQueryBuilder('order');
+        const queryBuilder = this.managerRepository.createQueryBuilder('manager');
 
             queryBuilder.orderBy({id: DescAscEnum.DESC}).skip((page - 1) * limit).take(limit);
 
         const [data, total] = await queryBuilder.getManyAndCount();
+        const orderStats = await this.ordersService.getOrderStats()
         const total_pages = Math.ceil(total/limit)
         if (page > total_pages || page < 1) {
             throw new BadRequestException('Invalid page number');
@@ -50,7 +59,7 @@ try {
         const prev_page = page > 1 ? page - 1 : null
         const next_page = page < total_pages ? page + 1: null;
 
-        return { data, total_pages, prev_page, next_page };
+        return { orderStats,  data, total_pages, prev_page, next_page };
     }
 
 public async activate(dto: string): Promise<IActivateManager> {

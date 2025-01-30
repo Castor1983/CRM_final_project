@@ -5,9 +5,10 @@ import {APP_GUARD} from "@nestjs/core";
 import {JwtAccessGuard} from "../../guards/jwt-access.guard";
 import {JwtModule} from "@nestjs/jwt";
 import {AuthModule} from "../auth/auth.module";
+import {OrdersModule} from "../orders/orders.module";
 
 @Module({
-  imports: [JwtModule, forwardRef(() => AuthModule)],
+  imports: [JwtModule, OrdersModule, forwardRef(() => AuthModule)],
   controllers: [ManagersController],
   providers: [{
     provide: APP_GUARD,
