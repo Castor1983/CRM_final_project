@@ -11,7 +11,7 @@ export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
   public async findAll(paginationDto: PaginationDto): Promise<OrderPaginationResDto> {
-    const { page, limit, sort, order,  name, surname, email, phone, age } = paginationDto;
+    const { page, limit, sort, order,  name, surname, email, phone, age, course_format, course, course_type, status } = paginationDto;
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
   const allowedSortFields = COLUMNS_NAME.orderColumnsName
     const allowedOrderFields = DESC_ASC
@@ -36,6 +36,18 @@ export class OrdersService {
     }
     if (age) {
       queryBuilder.andWhere('order.age = :age', { age });
+    }
+    if (course) {
+      queryBuilder.andWhere('order.course = :course', { course });
+    }
+    if (course_type) {
+      queryBuilder.andWhere('order.course_type = :course_type', { course_type });
+    }
+    if (course_format) {
+      queryBuilder.andWhere('order.course_format = :course_format', { course_format });
+    }
+    if (status) {
+      queryBuilder.andWhere('order.status = :status', { status });
     }
 
     if (sort && order) {
