@@ -52,20 +52,20 @@ export class OrdersService {
     const stats = await queryBuilder
         .select([
           'COUNT(order.id) AS total',
-          /*`SUM(CASE WHEN order.status = :in work THEN 1 ELSE 0 END) AS in_work`,
-          `SUM(CASE WHEN order.status = :new THEN 1 ELSE 0 END) AS new`,*/
+          `SUM(CASE WHEN order.status = :inWork THEN 1 ELSE 0 END) AS in_work`,
+          `SUM(CASE WHEN order.status = :new THEN 1 ELSE 0 END) AS new`,
           'SUM(CASE WHEN order.status = :agree THEN 1 ELSE 0 END) AS agree',
           'SUM(CASE WHEN order.status = :disagree THEN 1 ELSE 0 END) AS disagree',
           'SUM(CASE WHEN order.status = :dubbing THEN 1 ELSE 0 END) AS dubbing',
           'SUM(CASE WHEN order.status IS NULL THEN 1 ELSE 0 END) AS null_count'
         ])
-        .setParameters( {/*inWork: 'In work', newStatus: 'New',*/ agree: 'Agree', disagree: 'Disagree',  dubbing: 'Dubbing' } )
+        .setParameters( { new: 'New', agree: 'Agree', disagree: 'Disagree',  dubbing: 'Dubbing', inWork: 'In work', } )
         .getRawOne();
 
     return {
       total: Number(stats.total),
-     /* in_work: Number(stats.in_work),
-      new: Number(stats.new),*/
+      in_work: Number(stats.in_work),
+      new: Number(stats.new),
       agree: Number(stats.agree),
       disagree: Number(stats.disagree),
       dubbing: Number(stats.dubbing),

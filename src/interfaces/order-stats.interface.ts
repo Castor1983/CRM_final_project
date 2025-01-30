@@ -1,8 +1,8 @@
 
 export interface IOrderStats {
   total: number,
- /* in_work: number,
-  new: number,*/
+ in_work: number,
+  new: number,
   agree: number,
   disagree: number,
   dubbing: number,
