@@ -11,63 +11,51 @@ export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
   public async findAll(paginationDto: PaginationDto): Promise<OrderPaginationResDto> {
-    const { page, limit, sort, order,  name, surname, email, phone, age, course_format, course, course_type, status } = paginationDto;
+    const { page, limit, sort, order, ...filters } = paginationDto;
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
-  const allowedSortFields = COLUMNS_NAME.orderColumnsName
-    const allowedOrderFields = DESC_ASC
+
+    const allowedSortFields = COLUMNS_NAME.orderColumnsName;
+    const allowedOrderFields = DESC_ASC;
 
     if (sort && !allowedSortFields.includes(sort)) {
       throw new BadRequestException(`Invalid sort field: ${sort}`);
     }
-    if (order&& !allowedOrderFields.includes(order)){
+    if (order && !allowedOrderFields.includes(order)) {
       throw new BadRequestException(`Invalid order field: ${order}`);
     }
-    if (name) {
-      queryBuilder.andWhere('order.name LIKE :name', { name: `%${name}%` });
-    }
-    if (surname) {
-      queryBuilder.andWhere('order.surname LIKE :surname', { surname: `%${surname}%` });
-    }
-    if (email) {
-      queryBuilder.andWhere('order.email LIKE :email', { email: `%${email}%` });
-    }
-    if (phone) {
-      queryBuilder.andWhere('order.phone LIKE :phone', { phone: `%${phone}%` });
-    }
-    if (age) {
-      queryBuilder.andWhere('order.age = :age', { age });
-    }
-    if (course) {
-      queryBuilder.andWhere('order.course = :course', { course });
-    }
-    if (course_type) {
-      queryBuilder.andWhere('order.course_type = :course_type', { course_type });
-    }
-    if (course_format) {
-      queryBuilder.andWhere('order.course_format = :course_format', { course_format });
-    }
-    if (status) {
-      queryBuilder.andWhere('order.status = :status', { status });
-    }
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (['name', 'surname', 'email', 'phone'].includes(key)) {
+          queryBuilder.andWhere(`order.${key} LIKE :${key}`, { [key]: `%${value}%` });
+        } else {
+          queryBuilder.andWhere(`order.${key} = :${key}`, { [key]: value });
+        }
+      }
+    });
 
     if (sort && order) {
       queryBuilder.orderBy(`order.${sort}`, order);
-    }else {
-      queryBuilder.orderBy({id: DescAscEnum.DESC})
+    } else {
+      queryBuilder.orderBy({ id: DescAscEnum.DESC });
     }
 
     queryBuilder.skip((page - 1) * limit).take(limit);
 
     const [data, total] = await queryBuilder.getManyAndCount();
-    if(!data || data.length === 0) {
-      throw new BadRequestException ( 'Orders not found')
+
+    if (!data || data.length === 0) {
+      throw new BadRequestException('Orders not found');
     }
-    const total_pages = Math.ceil(total/limit)
+
+    const total_pages = Math.ceil(total / limit);
+
     if (page > total_pages || page < 1) {
       throw new BadRequestException('Invalid page number');
     }
-    const prev_page = page > 1 ? page - 1 : null
-    const next_page = page < total_pages ? page + 1: null;
+
+    const prev_page = page > 1 ? page - 1 : null;
+    const next_page = page < total_pages ? page + 1 : null;
 
     return { data, total_pages, prev_page, next_page };
   }
