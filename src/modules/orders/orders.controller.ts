@@ -1,3 +1,4 @@
+import * as dayjs from 'dayjs';
 import {
   Controller,
   Get,
@@ -56,8 +57,8 @@ export class OrdersController {
   @Get('export')
   public async exportOrders(@Query() paginationDto: PaginationDto, @Res() res: Response) {
     const fileBuffer = await this.ordersService.exportToExcel(paginationDto);
-
-    res.setHeader('Content-Disposition', 'attachment; filename="orders.xlsx"');
+    const dateStr = dayjs().format('YYYY-MM-DD_HH-mm-ss');
+    res.setHeader('Content-Disposition', `attachment; filename="orders_${dateStr}.xlsx"`);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
     return res.send(fileBuffer);
