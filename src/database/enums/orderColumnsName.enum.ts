@@ -13,5 +13,7 @@ export enum OrderColumnsNameEnum {
     ALREADY_PAID = 'alreadyPaid',
     CREATED_AT ='created_at',
     UTM = 'utm',
-    MSG = 'msg'
+    MSG = 'msg',
+    GROUP = 'group',
+    MANAGER = 'manager'
 }
