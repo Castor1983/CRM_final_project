@@ -33,7 +33,8 @@ export class OrdersController {
   @ApiQuery({ name: 'course_type', required: false, enum: CourseTypeEnum, description: 'Filter by course type'} )
   @ApiQuery({ name: 'status', required: false, enum: StatusEnum, description: 'Filter by status'} )
   @ApiQuery({ name: 'course', required: false, enum: CourseEnum, description: 'Filter by course'} )
-//todo group and me
+  @ApiQuery({ name: 'group', required: false, type: String, description: 'Filter by group'} )
+  @ApiQuery({ name: 'manager', required: false, type: Boolean, description: 'Filter by me'} )
   @UseGuards(JwtAccessGuard)
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
@@ -52,7 +53,8 @@ export class OrdersController {
   @ApiQuery({ name: 'course_type', required: false, enum: CourseTypeEnum, description: 'Filter by course type'} )
   @ApiQuery({ name: 'status', required: false, enum: StatusEnum, description: 'Filter by status'} )
   @ApiQuery({ name: 'course', required: false, enum: CourseEnum, description: 'Filter by course'} )
-//todo group and me
+  @ApiQuery({ name: 'group', required: false, type: String, description: 'Filter by group'} )
+  @ApiQuery({ name: 'manager', required: false, type: Boolean, description: 'Filter by me'} )
   @UseGuards(JwtAccessGuard)
   @Get('export')
   public async exportOrders(@Query() paginationDto: PaginationDto, @Res() res: Response) {

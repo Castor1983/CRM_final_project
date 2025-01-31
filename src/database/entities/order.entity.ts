@@ -55,6 +55,12 @@ export class OrderEntity {
   @Column('varchar', { length: 100, nullable: true, default: null })
   utm: string;
 
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  manager: string;
+
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  group: string;
+
   @CreateDateColumn({nullable: true, default: null})
   created_at: Date;
 }

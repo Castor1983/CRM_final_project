@@ -28,7 +28,7 @@ export class OrdersService {
 
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        if (['name', 'surname', 'email', 'phone'].includes(key)) {
+        if (['name', 'surname', 'email', 'phone', 'group'].includes(key)) {
           queryBuilder.andWhere(`order.${key} LIKE :${key}`, { [key]: `%${value}%` });
         } else {
           queryBuilder.andWhere(`order.${key} = :${key}`, { [key]: value });
@@ -88,7 +88,8 @@ export class OrdersService {
       null_count: Number(stats.null_count)
     };
   }
-  async exportToExcel(dto: PaginationDto): Promise<Buffer> {
+
+  public async exportToExcel(dto: PaginationDto): Promise<Buffer> {
 
     const orders = await this.findAll(dto);
 
@@ -116,7 +117,8 @@ export class OrdersService {
       { header: 'Utm', key: 'utm', width: 15 },
       { header: 'Msg', key: 'msg', width: 15 },
       { header: 'Status', key: 'status', width: 15 },
-        //todo group manager
+      { header: 'Group', key: 'group', width: 15 },
+      { header: 'Manager', key: 'manager', width: 15 },
     ];
 
     orders.data.forEach((order) => {

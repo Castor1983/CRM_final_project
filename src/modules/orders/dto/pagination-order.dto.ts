@@ -1,4 +1,4 @@
-import {IsEnum, IsIn, IsInt, IsOptional, IsString, Min} from 'class-validator';
+import {IsBoolean, IsEnum, IsIn, IsInt, IsOptional, IsString, Min} from 'class-validator';
 import { Type } from 'class-transformer';
 import {OrderColumnsNameEnum} from "../../../database/enums/orderColumnsName.enum";
 import {CourseEnum} from "../../../database/enums/course.enum";
@@ -40,6 +40,13 @@ export class PaginationDto {
     @IsEnum(StatusEnum)
     status?: StatusEnum;
 
+    @IsOptional()
+    @IsBoolean()
+    manager?: boolean
+
+    @IsOptional()
+    @IsString()
+    group?: string
 
     @IsOptional()
     @IsString()
