@@ -1,4 +1,6 @@
+import * as ExcelJS from 'exceljs';
 import {BadRequestException, Injectable} from '@nestjs/common';
+
 import {OrderRepository} from "../repositories/services/order.repository";
 import {PaginationDto} from "./dto/pagination-order.dto";
 import {COLUMNS_NAME, DESC_ASC} from "../../common/constants";
@@ -85,5 +87,43 @@ export class OrdersService {
       dubbing: Number(stats.dubbing),
       null_count: Number(stats.null_count)
     };
+  }
+  async exportToExcel(dto: PaginationDto): Promise<Buffer> {
+
+    const orders = await this.findAll(dto);
+
+    if (!orders.data.length) {
+      throw new BadRequestException('No orders found for export');
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Orders');
+
+    worksheet.columns = [
+      { header: 'ID', key: 'id', width: 10 },
+      { header: 'Name', key: 'name', width: 20 },
+      { header: 'Surname', key: 'surname', width: 20 },
+      { header: 'Email', key: 'email', width: 25 },
+      { header: 'Phone', key: 'phone', width: 15 },
+      { header: 'Course', key: 'course', width: 20 },
+      { header: 'Status', key: 'status', width: 15 },
+      { header: 'Age', key: 'age', width: 15 },
+      { header: 'Format', key: 'course_format', width: 15 },
+      { header: 'Type', key: 'course_type', width: 15 },
+      { header: 'Sum', key: 'sum', width: 15 },
+      { header: 'Already paid', key: 'alreadyPaid', width: 15 },
+      { header: 'Create', key: 'create_at', width: 15 },
+      { header: 'Utm', key: 'utm', width: 15 },
+      { header: 'Msg', key: 'msg', width: 15 },
+      { header: 'Status', key: 'status', width: 15 },
+        //todo group manager
+    ];
+
+    orders.data.forEach((order) => {
+      worksheet.addRow(order);
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    return Buffer.from(buffer);
   }
 }
