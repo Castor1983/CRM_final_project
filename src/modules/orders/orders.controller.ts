@@ -28,6 +28,7 @@ export class OrdersController {
     const managerId = req.manager.managerId
     return this.ordersService.findAll(paginationDto, managerId);
   }
+
   @ApiBearerAuth()
   @ApiQuery({
     name: 'filters',
@@ -47,6 +48,12 @@ export class OrdersController {
     return res.send(fileBuffer);
   }
 
+@ApiBearerAuth()
+@UseGuards(JwtAccessGuard)
+@Get(':orderId')
+  public async getOrderById (@Query() orderId: string) {
+    return  this.ordersService.getOrderById(orderId)
+}
 }
 
 
