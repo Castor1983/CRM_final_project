@@ -7,11 +7,13 @@ import {COLUMNS_NAME, DESC_ASC} from "../../common/constants";
 import {OrderPaginationResDto} from "./dto/order-pagination.res.dto";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {IOrderStats} from "../../interfaces/order-stats.interface";
+import {CommentRepository} from "../repositories/services/comment.repository";
 
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(private readonly orderRepository: OrderRepository,
+              private readonly commentRepository: CommentRepository) {}
 
   public async findAll(paginationDto: PaginationDto, managerId: string): Promise<OrderPaginationResDto> {
     const { page, limit, sort, order, ...filters } = paginationDto;
@@ -106,5 +108,9 @@ export class OrdersService {
     }
     return order
 
+  }
+
+  public async createComment (orderId: string, dto) {
+    await this.commentRepository.create({...dto, order_id: orderId, manager_id:})//todo
   }
 }

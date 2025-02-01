@@ -1,7 +1,7 @@
 import * as dayjs from 'dayjs';
 import {
   Controller,
-  Get, Param,
+  Get, Param, Post,
   Query, Req, Res, UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -9,6 +9,7 @@ import { OrdersService } from './orders.service';
 import {PaginationDto} from "./dto/pagination-order.dto";
 import {ApiBearerAuth, ApiQuery} from "@nestjs/swagger";
 import {JwtAccessGuard} from "../../guards/jwt-access.guard";
+import {CreateCommentDto} from "./dto/create-comment.dto";
 
 
 @Controller('orders')
@@ -52,9 +53,15 @@ export class OrdersController {
 @UseGuards(JwtAccessGuard)
 @Get(':orderId')
   public async getOrderById (@Param('orderId') orderId: string) {
-  console.log(orderId)
     return  this.ordersService.getOrderById(orderId)
 }
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  @Post(':orderId')
+  public async createComment (@Param('orderId') orderId: string, dto: CreateCommentDto) {
+
+    return  this.ordersService.createComment(orderId, dto)
+  }
 }
 
 
