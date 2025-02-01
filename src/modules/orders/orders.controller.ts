@@ -1,7 +1,8 @@
 import * as dayjs from 'dayjs';
 import {
+  Body,
   Controller,
-  Get, Param, Post,
+  Get, HttpCode, Param, Post,
   Query, Req, Res, UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -57,10 +58,13 @@ export class OrdersController {
 }
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
+  @HttpCode(200)
+  //TODO доделать гуарду проверяющую на то есть ли у заявки менеджер и если менеджер ты
   @Post(':orderId')
-  public async createComment (@Param('orderId') orderId: string, dto: CreateCommentDto) {
-
-    return  this.ordersService.createComment(orderId, dto)
+  public async createComment (@Body() dto: CreateCommentDto, @Param('orderId') orderId: string,  @Req() req: CustomRequest) {
+    console.log(orderId, dto, req.manager.managerId)
+    const managerId = req.manager.managerId
+    return  this.ordersService.createComment(orderId, dto, managerId)
   }
 }
 

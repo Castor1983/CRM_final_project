@@ -8,6 +8,7 @@ import {OrderPaginationResDto} from "./dto/order-pagination.res.dto";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {IOrderStats} from "../../interfaces/order-stats.interface";
 import {CommentRepository} from "../repositories/services/comment.repository";
+import {CreateCommentDto} from "./dto/create-comment.dto";
 
 
 @Injectable()
@@ -110,7 +111,7 @@ export class OrdersService {
 
   }
 
-  public async createComment (orderId: string, dto) {
-    await this.commentRepository.create({...dto, order_id: orderId, manager_id:})//todo
+  public async createComment (orderId: string, dto: CreateCommentDto, managerId: string) {
+    await this.commentRepository.save(this.commentRepository.create({...dto, order_id: orderId, manager_id: managerId}))//todo
   }
 }
