@@ -8,16 +8,17 @@ import {OrderPaginationResDto} from "./dto/order-pagination.res.dto";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {IOrderStats} from "../../interfaces/order-stats.interface";
 
+
 @Injectable()
 export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
-  public async findAll(paginationDto: PaginationDto): Promise<OrderPaginationResDto> {
+  public async findAll(paginationDto: PaginationDto, managerId: string): Promise<OrderPaginationResDto> {
     const { page, limit, sort, order, ...filters } = paginationDto;
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
-
     const allowedSortFields = COLUMNS_NAME.orderColumnsName;
     const allowedOrderFields = DESC_ASC;
+
 
     if (sort && !allowedSortFields.includes(sort)) {
       throw new BadRequestException(`Invalid sort field: ${sort}`);
@@ -25,11 +26,14 @@ export class OrdersService {
     if (order && !allowedOrderFields.includes(order)) {
       throw new BadRequestException(`Invalid order field: ${order}`);
     }
+    console.log(filters.manager, managerId)
 
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
+      if (value !== undefined && value !== null && value !== false) {
         if (['name', 'surname', 'email', 'phone', 'group'].includes(key)) {
           queryBuilder.andWhere(`order.${key} LIKE :${key}`, { [key]: `%${value}%` });
+        } else if (['manager'].includes(key)){
+          queryBuilder.andWhere('order.manager_id = :managerId', { managerId});
         } else {
           queryBuilder.andWhere(`order.${key} = :${key}`, { [key]: value });
         }
@@ -89,9 +93,9 @@ export class OrdersService {
     };
   }
 
-  public async exportToExcel(dto: PaginationDto): Promise<Buffer> {
+  public async exportToExcel(dto: PaginationDto, managerId: string): Promise<Buffer> {
 
-    const orders = await this.findAll(dto);
+    const orders = await this.findAll(dto, managerId);
 
     if (!orders.data.length) {
       throw new BadRequestException('No orders found for export');

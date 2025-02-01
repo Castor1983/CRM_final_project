@@ -12,6 +12,7 @@ import {Roles} from "../../decorators/roles.decorator";
 import {CreatePasswordDto} from "./dto/createPassword.dto";
 import {SkipAuth} from "../../decorators/skip-auth.decorator";
 import {PaginationDto} from "../orders/dto/pagination-order.dto";
+import {UniqueEmailGuard} from "../../guards/unique-email.guard";
 
 
 
@@ -23,7 +24,7 @@ export class ManagersController {
              ) {}
 
   @ApiBearerAuth()
-  @UseGuards(RolesGuard)
+  @UseGuards(RolesGuard, UniqueEmailGuard)
   @Post()
   @Roles(ManagerRole.ADMIN)
   create(@Body() dto: ManagerCreateDto) {

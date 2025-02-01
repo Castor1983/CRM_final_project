@@ -1,10 +1,4 @@
-import {
-    BadRequestException,
-    HttpException,
-    HttpStatus,
-    Injectable,
-    NotFoundException
-} from '@nestjs/common';
+import {BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 
 import {ManagerCreateDto} from './dto/create-manager.dto';
 import {ManagerEntity} from 'src/database/entities/manager.entity';
@@ -20,6 +14,7 @@ import {PaginationDto} from "../orders/dto/pagination-order.dto";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {ManagerPaginationResDto} from "./dto/manager-pagination.res.dto";
 import {OrdersService} from "../orders/orders.service";
+import {ManagerRole} from "../../database/enums/managerRole.enum";
 
 
 @Injectable()
@@ -64,7 +59,7 @@ try {
 
 public async activate(dto: string): Promise<IActivateManager> {
 
-      const manager = await this.managerRepository.findOneBy({id: +dto})
+      const manager = await this.managerRepository.findOneBy({id: dto})
 
 if(!manager) {
     throw new NotFoundException('Manager not found')
@@ -106,27 +101,34 @@ public async recoveryPassword (dto: string) {
 }
 
 public async unbanManager(managerId: string): Promise<ManagerEntity> {
-        const manager = await this.managerRepository.findOne({ where: { id: +managerId } });
+        const manager = await this.managerRepository.findOne({ where: { id: managerId } });
         if (!manager) {
             throw new NotFoundException('User not found');
         }
+    if(manager.role === ManagerRole.ADMIN) {
+        throw new BadRequestException ('Admin can not banned or unbanned')
+    }
         manager.is_banned = false;
         return this.managerRepository.save(manager);
 }
 
 public async banManager(managerId: string): Promise<ManagerEntity> {
-        const manager = await this.managerRepository.findOne({ where: { id: +managerId } });
+        const manager = await this.managerRepository.findOne({ where: { id: managerId } });
         if (!manager) {
             throw new NotFoundException('User not found');
+        }
+        if(manager.role === ManagerRole.ADMIN) {
+            throw new BadRequestException ('Admin can not banned')
         }
         manager.is_banned = true;
         return this.managerRepository.save(manager);
 }
-public async isManagerBanned(managerId: string): Promise<boolean> {
-        const manager = await this.managerRepository.findOne({ where: { email: managerId } });
+public async isManagerBanned(managerEmail: string): Promise<boolean> {
+        const manager = await this.managerRepository.findOne({ where: { email: managerEmail } });
         if (!manager) {
             throw new NotFoundException('User not found');
         }
+
         return manager.is_banned;
     }
 }

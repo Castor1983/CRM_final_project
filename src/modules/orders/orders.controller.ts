@@ -2,7 +2,7 @@ import * as dayjs from 'dayjs';
 import {
   Controller,
   Get,
-  Query, Res, UseGuards,
+  Query, Req, Res, UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { OrdersService } from './orders.service';
@@ -37,8 +37,9 @@ export class OrdersController {
   @ApiQuery({ name: 'manager', required: false, type: Boolean, description: 'Filter by me'} )
   @UseGuards(JwtAccessGuard)
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.ordersService.findAll(paginationDto);
+  findAll(@Query() paginationDto: PaginationDto, @Req() req: CustomRequest) {
+    const managerId = req.manager.managerId
+    return this.ordersService.findAll(paginationDto, managerId);
   }
   @ApiBearerAuth()
   @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number'} )
@@ -57,8 +58,9 @@ export class OrdersController {
   @ApiQuery({ name: 'manager', required: false, type: Boolean, description: 'Filter by me'} )
   @UseGuards(JwtAccessGuard)
   @Get('export')
-  public async exportOrders(@Query() paginationDto: PaginationDto, @Res() res: Response) {
-    const fileBuffer = await this.ordersService.exportToExcel(paginationDto);
+  public async exportOrders(@Query() paginationDto: PaginationDto,  @Req() req: CustomRequest,  @Res() res: Response) {
+    const managerId = req.manager.managerId
+    const fileBuffer = await this.ordersService.exportToExcel(paginationDto, managerId);
     const dateStr = dayjs().format('YYYY-MM-DD_HH-mm-ss');
     res.setHeader('Content-Disposition', `attachment; filename="orders_${dateStr}.xlsx"`);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -67,3 +69,9 @@ export class OrdersController {
   }
 
 }
+
+
+
+
+
+
