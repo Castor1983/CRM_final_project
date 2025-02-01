@@ -1,7 +1,7 @@
 import * as dayjs from 'dayjs';
 import {
   Controller,
-  Get,
+  Get, Param,
   Query, Req, Res, UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -51,7 +51,8 @@ export class OrdersController {
 @ApiBearerAuth()
 @UseGuards(JwtAccessGuard)
 @Get(':orderId')
-  public async getOrderById (@Query() orderId: string) {
+  public async getOrderById (@Param('orderId') orderId: string) {
+  console.log(orderId)
     return  this.ordersService.getOrderById(orderId)
 }
 }

@@ -19,7 +19,6 @@ export class OrdersService {
     const allowedSortFields = COLUMNS_NAME.orderColumnsName;
     const allowedOrderFields = DESC_ASC;
 
-
     if (sort && !allowedSortFields.includes(sort)) {
       throw new BadRequestException(`Invalid sort field: ${sort}`);
     }
@@ -97,7 +96,11 @@ export class OrdersService {
     return Buffer.from(buffer);
   }
   public async getOrderById (orderId: string) {
-    const order = await this.orderRepository.findOneBy({id: +orderId})
+    const orderIdNumber = Number(orderId);
+    if (isNaN(orderIdNumber)) {
+      throw new BadRequestException('Invalid order ID');
+    }
+    const order = await this.orderRepository.findOne({ where: {id: +orderId}, relations: ['comments'] })
     if (!order) {
       throw new BadRequestException('Order not found')
     }
