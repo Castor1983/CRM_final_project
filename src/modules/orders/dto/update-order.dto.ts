@@ -9,62 +9,62 @@ import {StatusEnum} from "../../../database/enums/status.enum";
 import {ApiProperty} from "@nestjs/swagger";
 
 export class UpdateOrderDto extends PartialType(OrderEntity) {
-    @ApiProperty()
+    @ApiProperty({ required: false, enum: CourseEnum })
     @IsOptional()
     @IsEnum(CourseEnum)
     course?: CourseEnum;
 
-    @ApiProperty()
+    @ApiProperty({ required: false, enum: CourseFormatEnum })
     @IsOptional()
     @IsEnum(CourseFormatEnum)
     course_format?: CourseFormatEnum;
 
-    @ApiProperty()
+    @ApiProperty({ required: false, enum: CourseTypeEnum })
     @IsOptional()
     @IsEnum(CourseTypeEnum)
     course_type?: CourseTypeEnum;
 
-    @ApiProperty()
+    @ApiProperty({ required: false, enum: StatusEnum })
     @IsOptional()
     @IsEnum(StatusEnum)
     status?: StatusEnum;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsString()
     group?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsString()
     name?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsString()
     surname?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsString()
     phone?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsInt()
     age?: number;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsString()
     email?: string;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsInt()
     sum?: number;
 
-    @ApiProperty()
+    @ApiProperty({required: false})
     @IsOptional()
     @IsInt()
     alreadyPaid?: number;
