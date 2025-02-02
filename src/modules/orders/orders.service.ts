@@ -1,5 +1,5 @@
 import * as ExcelJS from 'exceljs';
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 
 import {OrderRepository} from "../repositories/services/order.repository";
 import {PaginationDto} from "./dto/pagination-order.dto";
@@ -10,6 +10,9 @@ import {IOrderStats} from "../../interfaces/order-stats.interface";
 import {CommentRepository} from "../repositories/services/comment.repository";
 import {CreateCommentDto} from "./dto/create-comment.dto";
 import {StatusEnum} from "../../database/enums/status.enum";
+import {UpdateOrderDto} from "./dto/update-order.dto";
+import {DeepPartial} from "typeorm";
+import {OrderEntity} from "../../database/entities/order.entity";
 
 
 @Injectable()
@@ -131,4 +134,15 @@ export class OrdersService {
     }else {
       throw new BadRequestException ('Not enough rights')
     } }
+
+  public async updateOrder ( dto: UpdateOrderDto, orderId: string){
+    const order = await this.orderRepository.findOne({ where: { id: +orderId } });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    await this.orderRepository.update(order.id, dto);
+    return this.orderRepository.findOne({ where: { id: order.id } });
+  }
 }
