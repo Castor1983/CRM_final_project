@@ -135,6 +135,9 @@ export class OrdersService {
     } }
 
   public async updateOrder ( dto: UpdateOrderDto, orderId: string){
+    if (!Object.keys(dto).length) {
+      throw new BadRequestException('No update values provided');
+    }
     const order = await this.orderRepository.findOne({ where: { id: +orderId } });
 
     if (!order) {
