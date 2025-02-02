@@ -12,6 +12,9 @@ export class CommentEntity extends CreateUpdateModel  {
     @Column('text')
     body: string;
 
+    @Column('text')
+    manager_surname: string;
+
 
     @Column()
     manager_id: string;

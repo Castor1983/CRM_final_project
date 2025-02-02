@@ -62,9 +62,8 @@ export class OrdersController {
   //TODO доделать гуарду проверяющую на то есть ли у заявки менеджер и если менеджер ты
   @Post(':orderId')
   public async createComment (@Body() dto: CreateCommentDto, @Param('orderId') orderId: string,  @Req() req: CustomRequest) {
-    console.log(orderId, dto, req.manager.managerId)
-    const managerId = req.manager.managerId
-    return  this.ordersService.createComment(orderId, dto, managerId)
+    const {managerId, surname} = req.manager
+    return  this.ordersService.createComment(orderId, dto, managerId, surname)
   }
 }
 

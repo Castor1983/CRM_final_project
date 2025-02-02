@@ -111,7 +111,7 @@ export class OrdersService {
 
   }
 
-  public async createComment (orderId: string, dto: CreateCommentDto, managerId: string) {
-    await this.commentRepository.save(this.commentRepository.create({...dto, order_id: orderId, manager_id: managerId}))//todo
+  public async createComment (orderId: string, dto: CreateCommentDto, managerId: string, surname: string) {
+   return await this.commentRepository.save(this.commentRepository.create({...dto, order_id: orderId, manager_id: managerId, manager_surname: surname}))//todo
   }
 }

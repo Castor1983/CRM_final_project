@@ -3,5 +3,6 @@ interface CustomRequest extends Request {
         managerId: string;
         email: string;
         role: string;
+        surname: string
     };
 }
