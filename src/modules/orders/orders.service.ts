@@ -9,6 +9,7 @@ import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {IOrderStats} from "../../interfaces/order-stats.interface";
 import {CommentRepository} from "../repositories/services/comment.repository";
 import {CreateCommentDto} from "./dto/create-comment.dto";
+import {StatusEnum} from "../../database/enums/status.enum";
 
 
 @Injectable()
@@ -112,6 +113,24 @@ export class OrdersService {
   }
 
   public async createComment (orderId: string, dto: CreateCommentDto, managerId: string, surname: string) {
-   return await this.commentRepository.save(this.commentRepository.create({...dto, order_id: orderId, manager_id: managerId, manager_surname: surname}))//todo
-  }
+    const orderIdNumber = Number(orderId);
+    if (isNaN(orderIdNumber)) {
+      throw new BadRequestException('Invalid order ID');
+    }
+    const order = await this.orderRepository.findOneBy({id: +orderId})
+    if (!order) {
+      throw new BadRequestException('Order not found')
+    } if (order.manager === surname || order.manager === null) {
+          if(order.manager === null && order.status === null || order.status === StatusEnum.NEW) {
+            await this.orderRepository.update(orderId, {manager: surname, status: StatusEnum.INWORK})
+          }
+      return await this.commentRepository.save(this.commentRepository.create({
+        ...dto,
+        order_id: orderId,
+        manager_id: managerId,
+        manager_surname: surname
+      }))
+    }else {
+      throw new BadRequestException ('Not enough rights')
+    } }
 }
