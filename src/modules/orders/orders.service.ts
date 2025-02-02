@@ -75,8 +75,6 @@ export class OrdersService {
         .select(COLUMNS_NAME.statsColumnsRequest)
         .setParameters( { new: 'New', agree: 'Agree', disagree: 'Disagree',  dubbing: 'Dubbing', inWork: 'In work', } )
         .getRawOne();
-
-
   }
 
   public async exportToExcel(dto: PaginationDto, managerId: string): Promise<Buffer> {
