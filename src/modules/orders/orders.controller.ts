@@ -70,8 +70,9 @@ export class OrdersController {
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
   @Patch('edit/:orderId')
-  public async updateOrder (@Body() dto: UpdateOrderDto, @Param('orderId') orderId: string) {
-    return  this.ordersService.updateOrder(dto, orderId)
+  public async updateOrder (@Body() dto: UpdateOrderDto, @Param('orderId') orderId: string, @Req() req: CustomRequest) {
+    const {surname} = req.manager
+    return  this.ordersService.updateOrder(dto, orderId, surname)
   }
 
 }

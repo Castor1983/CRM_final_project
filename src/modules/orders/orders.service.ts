@@ -11,13 +11,15 @@ import {CommentRepository} from "../repositories/services/comment.repository";
 import {CreateCommentDto} from "./dto/create-comment.dto";
 import {StatusEnum} from "../../database/enums/status.enum";
 import {UpdateOrderDto} from "./dto/update-order.dto";
+import {GroupRepository} from "../repositories/services/group.repository";
 
 
 
 @Injectable()
 export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository,
-              private readonly commentRepository: CommentRepository) {}
+              private readonly commentRepository: CommentRepository,
+              private readonly groupRepository: GroupRepository,) {}
 
   public async findAll(paginationDto: PaginationDto, managerId: string): Promise<OrderPaginationResDto> {
     const { page, limit, sort, order, ...filters } = paginationDto;
@@ -134,17 +136,27 @@ export class OrdersService {
       throw new BadRequestException ('Not enough rights')
     } }
 
-  public async updateOrder ( dto: UpdateOrderDto, orderId: string){
+  public async updateOrder ( dto: UpdateOrderDto, orderId: string, surname: string){
     if (!Object.keys(dto).length) {
       throw new BadRequestException('No update values provided');
+    }
+    if (dto.group) {
+      const isGroupUnique = await this.groupRepository.findOne({where: {name: dto.group}})
+      if(!isGroupUnique){
+        this.groupRepository.create({name: dto.group})
+      }
     }
     const order = await this.orderRepository.findOne({ where: { id: +orderId } });
 
     if (!order) {
       throw new NotFoundException('Order not found');
     }
+    if (order.manager === surname || order.manager === null) {
+      await this.orderRepository.update(order.id, dto);
+      return this.orderRepository.findOne({ where: { id: order.id } });
+    } else {
+      throw new BadRequestException ('Not enough rights')
+    }
 
-    await this.orderRepository.update(order.id, dto);
-    return this.orderRepository.findOne({ where: { id: order.id } });
   }
 }
