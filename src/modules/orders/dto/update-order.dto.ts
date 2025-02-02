@@ -1,15 +1,27 @@
 import { PartialType, PickType } from '@nestjs/mapped-types';
-import { PaginationDto } from './pagination-order.dto';
+
 import {IsInt, IsOptional} from "class-validator";
+import {OrderEntity} from "../../../database/entities/order.entity";
 
 export class UpdateOrderDto extends PartialType(
-    PickType(PaginationDto, ['course', 'course_format', 'course_type', 'status', 'group', 'name', 'surname',  'phone', 'age', 'email'])
+    PickType(OrderEntity, [
+        'course',
+        'course_format',
+        'course_type',
+        'status',
+        'group',
+        'name',
+        'surname',
+        'phone',
+        'age',
+        'email',
+    ]),
 ) {
     @IsOptional()
     @IsInt()
-    sum?: number
+    sum?: number;
 
     @IsOptional()
     @IsInt()
-    alreadyPaid?: number
+    alreadyPaid?: number;
 }

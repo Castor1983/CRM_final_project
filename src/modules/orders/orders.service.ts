@@ -11,8 +11,7 @@ import {CommentRepository} from "../repositories/services/comment.repository";
 import {CreateCommentDto} from "./dto/create-comment.dto";
 import {StatusEnum} from "../../database/enums/status.enum";
 import {UpdateOrderDto} from "./dto/update-order.dto";
-import {DeepPartial} from "typeorm";
-import {OrderEntity} from "../../database/entities/order.entity";
+
 
 
 @Injectable()
