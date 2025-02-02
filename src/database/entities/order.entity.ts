@@ -1,7 +1,7 @@
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -10,6 +10,8 @@ import { CourseFormatEnum } from '../enums/courseFormat.enum';
 import { CourseTypeEnum } from '../enums/courseType.enum';
 import { StatusEnum } from '../enums/status.enum';
 import {TableNameEnum} from "../enums/table-name.enum";
+import {ManagerEntity} from "./manager.entity";
+import {CommentEntity} from "./comment.entity";
 
 @Entity(TableNameEnum.ORDERS)
 export class OrderEntity {
@@ -55,6 +57,16 @@ export class OrderEntity {
   @Column('varchar', { length: 100, nullable: true, default: null })
   utm: string;
 
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  manager: string;
+
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  group: string;
+
   @CreateDateColumn({nullable: true, default: null})
   created_at: Date;
+  @ManyToOne(() => ManagerEntity, (manager) => manager.orders, { onDelete: 'SET NULL' })
+  manager_: ManagerEntity;
+  @OneToMany(() => CommentEntity, (entity) => entity.order)
+  comments?: CommentEntity[];
 }

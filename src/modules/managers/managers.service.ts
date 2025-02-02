@@ -10,9 +10,10 @@ import {IActivateManager} from "../../interfaces/activate-manager.interface";
 import {CreatePasswordDto} from "./dto/createPassword.dto";
 import {TokenType} from "../../database/enums/token-type.enum";
 import * as bcrypt from "bcryptjs";
-import {PaginationDto} from "../orders/dto/pagination-order.dto";
 import {DescAscEnum} from "../../database/enums/desc-asc.enum";
 import {ManagerPaginationResDto} from "./dto/manager-pagination.res.dto";
+import {OrdersService} from "../orders/orders.service";
+import {ManagerRole} from "../../database/enums/managerRole.enum";
 
 
 @Injectable()
@@ -21,6 +22,7 @@ export class ManagersService {
   constructor(
       private readonly managerRepository: ManagerRepository,
       private readonly  tokenService: TokenService,
+      private readonly ordersService: OrdersService,
       private readonly configService: ConfigService<Config>,) {
     this.appConfig = configService.get<AppConfig>('app')
   }
@@ -35,27 +37,30 @@ try {
 }
 
   }
-    public async getAll(dto: PaginationDto): Promise<ManagerPaginationResDto> {
-        const { page, limit} = dto;
+    public async getAll(): Promise<ManagerPaginationResDto> {
 
-        const queryBuilder = this.managerRepository.createQueryBuilder('order');
 
-            queryBuilder.orderBy({id: DescAscEnum.DESC}).skip((page - 1) * limit).take(limit);
+        const queryBuilder = this.managerRepository.createQueryBuilder('manager');
 
-        const [data, total] = await queryBuilder.getManyAndCount();
-        const total_pages = Math.ceil(total/limit)
-        if (page > total_pages || page < 1) {
-            throw new BadRequestException('Invalid page number');
-        }
-        const prev_page = page > 1 ? page - 1 : null
-        const next_page = page < total_pages ? page + 1: null;
+            queryBuilder.orderBy({id: DescAscEnum.DESC})
 
-        return { data, total_pages, prev_page, next_page };
+        const managers  = await queryBuilder.getMany();
+        const orderStats = await this.ordersService.getOrderStats()
+        const managersWithStats = await Promise.all(
+            managers.map(async (manager) => {
+                const orderStats = await this.ordersService.getOrderStatsByManager(manager.id);
+                return { ...manager, orderStats };
+            })
+        );
+
+
+
+        return { orderStats,  data: managersWithStats };
     }
 
 public async activate(dto: string): Promise<IActivateManager> {
 
-      const manager = await this.managerRepository.findOneBy({id: +dto})
+      const manager = await this.managerRepository.findOneBy({id: dto})
 
 if(!manager) {
     throw new NotFoundException('Manager not found')
@@ -97,27 +102,34 @@ public async recoveryPassword (dto: string) {
 }
 
 public async unbanManager(managerId: string): Promise<ManagerEntity> {
-        const manager = await this.managerRepository.findOne({ where: { id: +managerId } });
+        const manager = await this.managerRepository.findOne({ where: { id: managerId } });
         if (!manager) {
             throw new NotFoundException('User not found');
         }
+    if(manager.role === ManagerRole.ADMIN) {
+        throw new BadRequestException ('Admin can not banned or unbanned')
+    }
         manager.is_banned = false;
         return this.managerRepository.save(manager);
 }
 
 public async banManager(managerId: string): Promise<ManagerEntity> {
-        const manager = await this.managerRepository.findOne({ where: { id: +managerId } });
+        const manager = await this.managerRepository.findOne({ where: { id: managerId } });
         if (!manager) {
             throw new NotFoundException('User not found');
+        }
+        if(manager.role === ManagerRole.ADMIN) {
+            throw new BadRequestException ('Admin can not banned')
         }
         manager.is_banned = true;
         return this.managerRepository.save(manager);
 }
-public async isManagerBanned(managerId: string): Promise<boolean> {
-        const manager = await this.managerRepository.findOne({ where: { email: managerId } });
+public async isManagerBanned(managerEmail: string): Promise<boolean> {
+        const manager = await this.managerRepository.findOne({ where: { email: managerEmail } });
         if (!manager) {
             throw new NotFoundException('User not found');
         }
+
         return manager.is_banned;
     }
 }

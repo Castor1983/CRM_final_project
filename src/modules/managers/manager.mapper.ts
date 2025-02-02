@@ -9,7 +9,8 @@ export class ManagerMapper {
     return {
       managerId: payload.managerId,
       email: manager.email,
-      role: manager.role
+      role: manager.role,
+      surname: manager.surname
     };
   }
 }

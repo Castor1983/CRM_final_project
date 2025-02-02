@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Get, HttpCode, Param, Patch,
-  Post, Query, UseGuards,
+  Post, UseGuards,
 } from '@nestjs/common';
 import { ManagersService } from './managers.service';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
@@ -11,7 +11,7 @@ import {ManagerRole} from "../../database/enums/managerRole.enum";
 import {Roles} from "../../decorators/roles.decorator";
 import {CreatePasswordDto} from "./dto/createPassword.dto";
 import {SkipAuth} from "../../decorators/skip-auth.decorator";
-import {PaginationDto} from "../orders/dto/pagination-order.dto";
+import {UniqueEmailGuard} from "../../guards/unique-email.guard";
 
 
 
@@ -23,7 +23,7 @@ export class ManagersController {
              ) {}
 
   @ApiBearerAuth()
-  @UseGuards(RolesGuard)
+  @UseGuards(RolesGuard, UniqueEmailGuard)
   @Post()
   @Roles(ManagerRole.ADMIN)
   create(@Body() dto: ManagerCreateDto) {
@@ -33,8 +33,8 @@ export class ManagersController {
   @UseGuards(RolesGuard)
   @Get()
   @Roles(ManagerRole.ADMIN)
-  getAllManagers(@Query() dto: PaginationDto) {
-    return this.managersService.getAll(dto);
+  getAllManagers() {
+    return this.managersService.getAll();
   }
 
   @ApiBearerAuth()

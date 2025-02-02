@@ -4,4 +4,5 @@ export interface IManagerData {
   managerId: string;
   email: string;
   role: ManagerRole;
+  surname: string;
 }

@@ -50,12 +50,13 @@ export class JwtAccessGuard implements CanActivate {
     }
 
     const manager = await this.managerRepository.findOneBy({
-      id: +payload.managerId,
+      id: payload.managerId,
     });
     if (!manager) {
       throw new UnauthorizedException();
     }
     request.manager = ManagerMapper.toIManagerData(manager, payload);
+
     return true;
   }
 }

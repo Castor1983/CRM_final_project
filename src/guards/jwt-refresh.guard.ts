@@ -42,7 +42,7 @@ export class JwtRefreshGuard implements CanActivate {
     }
 
     const manager = await this.managerRepository.findOneBy({
-      id: +payload.managerId,
+      id: payload.managerId,
     });
     if (!manager) {
       throw new UnauthorizedException();
