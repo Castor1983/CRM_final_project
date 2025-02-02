@@ -13,6 +13,8 @@ import {StatusEnum} from "../../database/enums/status.enum";
 import {UpdateOrderDto} from "./dto/update-order.dto";
 import {GroupRepository} from "../repositories/services/group.repository";
 import {GroupEntity} from "../../database/entities/group.entity";
+import {ManagerRepository} from "../repositories/services/manager.repository";
+
 
 
 
@@ -20,6 +22,7 @@ import {GroupEntity} from "../../database/entities/group.entity";
 export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository,
               private readonly commentRepository: CommentRepository,
+              private readonly managerRepository: ManagerRepository,
               private readonly groupRepository: GroupRepository,) {}
 
   public async findAll(paginationDto: PaginationDto, managerId: string): Promise<OrderPaginationResDto> {
@@ -81,6 +84,15 @@ export class OrdersService {
         .setParameters( { new: 'New', agree: 'Agree', disagree: 'Disagree',  dubbing: 'Dubbing', inWork: 'In work', } )
         .getRawOne();
   }
+  public async getOrderStatsByManager(id: string): Promise<IOrderStats> {
+    const queryBuilder = this.orderRepository.createQueryBuilder('order');
+
+    return await queryBuilder
+        .select(COLUMNS_NAME.statsColumnsRequest)
+        .where('order.manager_id = :id', { id })
+        .setParameters( { new: 'New', agree: 'Agree', disagree: 'Disagree',  dubbing: 'Dubbing', inWork: 'In work', } )
+        .getRawOne();
+  }
 
   public async exportToExcel(dto: PaginationDto, managerId: string): Promise<Buffer> {
 
@@ -137,7 +149,7 @@ export class OrdersService {
       throw new BadRequestException ('Not enough rights')
     } }
 
-  public async updateOrder ( dto: UpdateOrderDto, orderId: string, surname: string){
+  public async updateOrder ( dto: UpdateOrderDto, orderId: string, surname: string, managerId: string){
     if (!Object.keys(dto).length) {
       throw new BadRequestException('No update values provided');
     }
@@ -152,13 +164,15 @@ export class OrdersService {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    if (order.manager === surname || order.manager === null) {
+    if (order.manager === surname) {
       await this.orderRepository.update(order.id, dto);
-      return this.orderRepository.findOne({ where: { id: order.id } });
+    }else if (order.manager === null){
+      const managerEntity = await this.managerRepository.findOne({ where: { id: managerId } });
+      await this.orderRepository.update(order.id, {...dto, manager: surname, manager_: managerEntity});
     } else {
       throw new BadRequestException ('Not enough rights')
     }
-
+return this.orderRepository.findOne({ where: { id: order.id } });
   }
 
   public async getAllGroups(): Promise<GroupEntity[]> {

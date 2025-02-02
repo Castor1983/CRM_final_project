@@ -65,7 +65,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
-  @Post('comment/:orderId')
+  @Post('addComment/:orderId')
   public async createComment (@Body() dto: CreateCommentDto, @Param('orderId') orderId: string,  @Req() req: CustomRequest) {
     const {managerId, surname} = req.manager
     return  this.ordersService.createComment(orderId, dto, managerId, surname)
@@ -76,8 +76,8 @@ export class OrdersController {
   @HttpCode(200)
   @Patch('edit/:orderId')
   public async updateOrder (@Body() dto: UpdateOrderDto, @Param('orderId') orderId: string, @Req() req: CustomRequest) {
-    const {surname} = req.manager
-    return  this.ordersService.updateOrder(dto, orderId, surname)
+    const {surname, managerId} = req.manager
+    return  this.ordersService.updateOrder(dto, orderId, surname, managerId)
   }
 
 }
