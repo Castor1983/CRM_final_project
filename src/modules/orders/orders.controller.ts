@@ -50,7 +50,12 @@ export class OrdersController {
 
     return res.send(fileBuffer);
   }
-
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  @Get('groups')
+  async getAllGroups() {
+    return this.ordersService.getAllGroups();
+  }
 @ApiBearerAuth()
 @UseGuards(JwtAccessGuard)
 @Get(':orderId')
