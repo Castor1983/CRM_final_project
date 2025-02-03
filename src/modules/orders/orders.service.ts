@@ -156,7 +156,7 @@ export class OrdersService {
     if (dto.group) {
       const isGroupUnique = await this.groupRepository.findOne({where: {name: dto.group}})
       if(!isGroupUnique){
-        this.groupRepository.create({name: dto.group})
+        await this.groupRepository.save({name: dto.group})
       }
     }
     const order = await this.orderRepository.findOne({ where: { id: +orderId } });

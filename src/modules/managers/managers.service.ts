@@ -86,7 +86,7 @@ public async createPassword (token: string, dto: CreatePasswordDto) {
     const payload = await this.tokenService.verifyToken(token, TokenType.ACTIVATE);
       if (dto.password === dto.confirmPassword) {
           const hashPassword = await bcrypt.hash(dto.password, 10);
-           await this.managerRepository.update(+payload.managerId, {password: hashPassword, is_active: true})
+           await this.managerRepository.update(payload.managerId, {password: hashPassword, is_active: true})
       } else {
           throw new BadRequestException ('Password and password confirmation do not match')
       }
@@ -94,7 +94,7 @@ public async createPassword (token: string, dto: CreatePasswordDto) {
 }
 
 public async recoveryPassword (dto: string) {
-     const manager = await this.managerRepository.update(+dto, { is_active: false})
+     const manager = await this.managerRepository.update(dto, { is_active: false})
     if(!manager) {
         throw new NotFoundException('Manager not found')
     }
