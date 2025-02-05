@@ -291,7 +291,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Alex\",\n    \"surname\": \"Bavta\",\n    \"email\": \"51111132121manager@gmail.com\"\n    \n\n}",
+							"raw": "{\n\t\"name\": \"Alex\",\n    \"surname\": \"Bavta\",\n    \"email\": \"51113d221manager@gmail.com\"\n    \n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -360,7 +360,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/managers/activate/manager/16",
+							"raw": "{{host}}/api/managers/activate/manager/f5ea0df7-da4e-4bb0-8d19-002e4d2d767f",
 							"host": [
 								"{{host}}"
 							],
@@ -369,7 +369,7 @@
 								"managers",
 								"activate",
 								"manager",
-								"16"
+								"f5ea0df7-da4e-4bb0-8d19-002e4d2d767f"
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -608,7 +608,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/managers/deactivate/21",
+							"raw": "{{host}}/api/managers/deactivate/f5ea0df7-da4e-4bb0-8d19-002e4d2d767f",
 							"host": [
 								"{{host}}"
 							],
@@ -616,7 +616,7 @@
 								"api",
 								"managers",
 								"deactivate",
-								"21"
+								"f5ea0df7-da4e-4bb0-8d19-002e4d2d767f"
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -629,7 +629,7 @@
 			"name": "orders",
 			"item": [
 				{
-					"name": "getAll-orders-by-sort",
+					"name": "getAll-orders-by-sort-filters",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -644,7 +644,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/orders?page=1&sort=name&order=ASC",
+							"raw": "{{host}}/api/orders",
 							"host": [
 								"{{host}}"
 							],
@@ -655,15 +655,87 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "1",
+									"description": "pagination",
+									"disabled": true
 								},
 								{
 									"key": "sort",
-									"value": "name"
+									"value": "name",
+									"description": "sort by column name",
+									"disabled": true
 								},
 								{
 									"key": "order",
-									"value": "ASC"
+									"value": "DESC",
+									"description": "ASC DESC",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Олег",
+									"description": "filter by name",
+									"disabled": true
+								},
+								{
+									"key": "surname",
+									"value": "руднева",
+									"description": "filter by surname",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "pennell.rose2017@yandex.com",
+									"description": "filter by email",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "097",
+									"description": "filter by phone",
+									"disabled": true
+								},
+								{
+									"key": "age",
+									"value": "26",
+									"description": "filter by age",
+									"disabled": true
+								},
+								{
+									"key": "course",
+									"value": "",
+									"description": "filter by course",
+									"disabled": true
+								},
+								{
+									"key": "course_format",
+									"value": "",
+									"description": "filter by course format",
+									"disabled": true
+								},
+								{
+									"key": "course_type",
+									"value": "",
+									"description": "filter by course type",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "",
+									"description": "filter by status",
+									"disabled": true
+								},
+								{
+									"key": "manager",
+									"value": "true",
+									"description": "filter by me",
+									"disabled": true
+								},
+								{
+									"key": "group",
+									"value": "",
+									"description": "filter by group",
+									"disabled": true
 								}
 							]
 						}
@@ -701,6 +773,174 @@
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-order -byId-with-comments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/orders/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\":\"акукавівіdвівірача\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/orders/addComment/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"addComment",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit-order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Figl\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/orders/edit/5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"edit",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/orders/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"groups"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
 					},
 					"response": []
 				}
