@@ -1,4 +1,5 @@
 import {NestFactory} from "@nestjs/core";
+import * as cors from "cors";
 import {Logger, ValidationPipe} from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
@@ -17,6 +18,11 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({
         whitelist: true,
         transform: true,
+    }));
+    app.use(cors({
+        origin: "http://localhost:5173",
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
     }));
 
     const config = new DocumentBuilder()

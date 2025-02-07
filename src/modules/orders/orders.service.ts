@@ -15,9 +15,6 @@ import {GroupRepository} from "../repositories/services/group.repository";
 import {GroupEntity} from "../../database/entities/group.entity";
 import {ManagerRepository} from "../repositories/services/manager.repository";
 
-
-
-
 @Injectable()
 export class OrdersService {
   constructor(private readonly orderRepository: OrderRepository,
@@ -73,7 +70,7 @@ export class OrdersService {
     const prev_page = page > 1 ? page - 1 : null;
     const next_page = page < total_pages ? page + 1 : null;
 
-    return { data, total_pages, prev_page, next_page };
+    return { data, total_pages, prev_page, next_page, current_page: page };
   }
 
   public async getOrderStats(): Promise<IOrderStats> {
