@@ -21,7 +21,7 @@ export class AuthService {
     public async signIn(dto: SignInReqDto): Promise<AuthResDto> {
     const manager = await this.managerRepository.findOne({
       where: { email: dto.email },
-      select: { id: true, password: true },
+      select: { id: true, password: true, role: true, surname: true },
     });
     if (!manager) {
       throw new UnauthorizedException();
@@ -31,26 +31,27 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const tokens = await this.tokenService.generateAuthTokens({
-      managerId: manager.id.toString(),
+      managerId: manager.id,
+      surname: manager.surname,
       role: manager.role
     });
 
     await Promise.all([
       this.refreshTokenRepository.delete({
-        managerId: manager.id.toString(),
+        managerId: manager.id
       }),
-      this.authCacheService.deleteToken(manager.id.toString()),
+      this.authCacheService.deleteToken(manager.id),
     ]);
 
     await Promise.all([
       this.refreshTokenRepository.save({
         refreshToken: tokens.refreshToken,
-        managerId: manager.id.toString(),
+        managerId: manager.id,
         role: manager.role
       }),
       this.authCacheService.saveToken(
           tokens.accessToken,
-          manager.id.toString(),
+          manager.id,
       ),
     ]);
     manager.last_login = new Date();
@@ -69,6 +70,7 @@ export class AuthService {
 
     const tokens = await this.tokenService.generateAuthTokens({
       managerId: managerData.managerId,
+      surname: managerData.surname,
       role: managerData.role
     });
 
