@@ -174,7 +174,7 @@ return this.orderRepository.findOne({ where: { id: order.id } });
 
   public async getAllGroups(): Promise<GroupEntity[]> {
 
-    const groups = await this.groupRepository.find();
+    const groups = await this.groupRepository.find({select: {id: true, name: true} });
     if (!groups || groups.length === 0) {
       throw new BadRequestException ('Groups not found')
     }
