@@ -12,6 +12,7 @@ import {ApiBearerAuth, ApiQuery} from "@nestjs/swagger";
 import {JwtAccessGuard} from "../../guards/jwt-access.guard";
 import {CreateCommentDto} from "./dto/create-comment.dto";
 import {UpdateOrderDto} from "./dto/update-order.dto";
+import {CreateGroupDto} from "./dto/create-group.dto";
 
 
 @Controller('orders')
@@ -56,6 +57,14 @@ export class OrdersController {
   async getAllGroups() {
     return this.ordersService.getAllGroups();
   }
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  @Post('groups')
+  async createGroup(@Body() dto: CreateGroupDto) {
+    return this.ordersService.createGroup(dto);
+  }
+
+
 @ApiBearerAuth()
 @UseGuards(JwtAccessGuard)
 @Get(':orderId')

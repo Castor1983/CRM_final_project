@@ -14,6 +14,7 @@ import {UpdateOrderDto} from "./dto/update-order.dto";
 import {GroupRepository} from "../repositories/services/group.repository";
 import {GroupEntity} from "../../database/entities/group.entity";
 import {ManagerRepository} from "../repositories/services/manager.repository";
+import {CreateGroupDto} from "./dto/create-group.dto";
 
 @Injectable()
 export class OrdersService {
@@ -179,6 +180,13 @@ return this.orderRepository.findOne({ where: { id: order.id } });
       throw new BadRequestException ('Groups not found')
     }
     return groups
+  }
+public async createGroup(dto: CreateGroupDto): Promise<void> {
+    const groupExist = await this.groupRepository.findOne({where: {name: dto.name}});
+    if (groupExist ) {
+      throw new BadRequestException ('Group is exist')
+    }
+     await this.groupRepository.save(dto)
   }
 
 
