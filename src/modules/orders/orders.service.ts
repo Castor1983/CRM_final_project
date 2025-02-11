@@ -135,7 +135,7 @@ export class OrdersService {
       throw new BadRequestException('Order not found')
     } if (order.manager === surname || order.manager === null) {
           if(order.manager === null && order.status === null || order.status === StatusEnum.NEW) {
-            await this.orderRepository.update(orderId, {manager: surname, status: StatusEnum.INWORK})
+            await this.orderRepository.update(orderId, {manager: surname, status: StatusEnum.INWORK, manager_: { id: managerId }})
           }
       return await this.commentRepository.save(this.commentRepository.create({
         ...dto,
@@ -165,8 +165,7 @@ export class OrdersService {
     if (order.manager === surname) {
       await this.orderRepository.update(order.id, dto);
     }else if (order.manager === null){
-      const managerEntity = await this.managerRepository.findOne({ where: { id: managerId } });
-      await this.orderRepository.update(order.id, {...dto, manager: surname, manager_: managerEntity});
+      await this.orderRepository.update(order.id, {...dto, manager: surname, manager_: {id: managerId}});
     } else {
       throw new BadRequestException ('Not enough rights')
     }
