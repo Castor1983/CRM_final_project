@@ -44,7 +44,7 @@ try {
 
             queryBuilder.orderBy({id: DescAscEnum.DESC})
 
-        const managers  = await queryBuilder.getMany();
+        const managers  = await queryBuilder.where("manager.role != :role", { role: ManagerRole.ADMIN }).getMany();
         const orderStats = await this.ordersService.getOrderStats()
         const managersWithStats = await Promise.all(
             managers.map(async (manager) => {
