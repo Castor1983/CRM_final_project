@@ -3,6 +3,10 @@ import * as process from 'node:process';
 import { Config } from './config.type';
 
 export default (): Config => ({
+  client: {
+    port: Number(process.env.CLIENT_PORT) || 5173,
+    host: process.env.CLIENT_HOST || 'localhost',
+  },
   app: {
     port: Number(process.env.APP_PORT) || 3000,
     host: process.env.APP_HOST || 'localhost',

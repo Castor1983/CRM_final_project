@@ -5,7 +5,7 @@ import {ManagerEntity} from 'src/database/entities/manager.entity';
 import {ManagerRepository} from '../repositories/services/manager.repository';
 import {TokenService} from "../auth/token.service";
 import {ConfigService} from "@nestjs/config/dist/config.service";
-import {AppConfig, Config} from "../../configs/config.type";
+import {ClientConfig, Config} from "../../configs/config.type";
 import {IActivateManager} from "../../interfaces/activate-manager.interface";
 import {CreatePasswordDto} from "./dto/createPassword.dto";
 import {TokenType} from "../../database/enums/token-type.enum";
@@ -18,13 +18,13 @@ import {ManagerRole} from "../../database/enums/managerRole.enum";
 
 @Injectable()
 export class ManagersService {
-    private readonly appConfig: AppConfig;
+    private readonly clientConfig: ClientConfig;
   constructor(
       private readonly managerRepository: ManagerRepository,
       private readonly  tokenService: TokenService,
       private readonly ordersService: OrdersService,
       private readonly configService: ConfigService<Config>,) {
-    this.appConfig = configService.get<AppConfig>('app')
+    this.clientConfig = configService.get<ClientConfig>('client')
   }
 
   public async create(dto: ManagerCreateDto): Promise<ManagerEntity> {
@@ -71,8 +71,7 @@ if (manager.is_active){
 
 const payload = {managerId: manager.id, role: manager.role, surname: manager.surname}
     const {activateToken} = await this.tokenService.generateActivateToken(payload);
-
-    const activationLink = `http://${this.appConfig.host}:${this.appConfig.port}/managers/activate/${activateToken}`;
+    const activationLink = `http://${this.clientConfig.host}:${this.clientConfig.port}/managers/activate/${activateToken}`;
 
   return {
     message: 'Activation link has been generated and copied to clipboard',

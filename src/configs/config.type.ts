@@ -4,8 +4,13 @@ export type Config = {
   mysql: MysqlConfig;
   jwt: JwtConfig;
   redis: RedisConfig;
+  client: ClientConfig;
 };
 
+export type ClientConfig = {
+  port: number;
+  host: string;
+};
 export type AppConfig = {
   port: number;
   host: string;
