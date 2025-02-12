@@ -109,6 +109,7 @@ public async unbanManager(managerId: string): Promise<ManagerEntity> {
         throw new BadRequestException ('Admin can not banned or unbanned')
     }
         manager.is_banned = false;
+        manager.is_active = true;
         return this.managerRepository.save(manager);
 }
 
@@ -121,6 +122,7 @@ public async banManager(managerId: string): Promise<ManagerEntity> {
             throw new BadRequestException ('Admin can not banned')
         }
         manager.is_banned = true;
+        manager.is_active = false;
         return this.managerRepository.save(manager);
 }
 public async isManagerBanned(managerEmail: string): Promise<boolean> {
