@@ -69,7 +69,7 @@ if (manager.is_active){
     throw new HttpException('Manager is active', HttpStatus.BAD_REQUEST)
 }
 
-const payload = {managerId: manager.id.toString(), role: manager.role, surname: manager.surname}
+const payload = {managerId: manager.id, role: manager.role, surname: manager.surname}
     const {activateToken} = await this.tokenService.generateActivateToken(payload);
 
     const activationLink = `http://${this.appConfig.host}:${this.appConfig.port}/managers/activate/${activateToken}`;
