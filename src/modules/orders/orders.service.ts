@@ -38,8 +38,8 @@ export class OrdersService {
 
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== false) {
-        if (['name', 'surname', 'email', 'phone', 'group'].includes(key)) {
-          queryBuilder.andWhere(`order.${key} LIKE :${key}`, { [key]: `%${value}%` });
+        if (['name', 'surname', 'email', 'phone', 'age', ].includes(key)) {
+          queryBuilder.andWhere(`LOWER(order.${key}) LIKE LOWER (:${key}) COLLATE utf8mb4_general_ci`, { [key]: `%${value}%` });
         } else if (['manager'].includes(key)){
           queryBuilder.andWhere('order.manager_id = :managerId', { managerId});
         } else {
@@ -57,11 +57,9 @@ export class OrdersService {
     queryBuilder.skip((page - 1) * limit).take(limit);
 
     const [data, total] = await queryBuilder.getManyAndCount();
-
-    if (!data || data.length === 0) {
-      throw new BadRequestException('Orders not found');
-    }
-
+if (data.length ===0 ) {
+  return { data, total_pages: 0, prev_page: null, next_page: null, current_page: page }
+}
     const total_pages = Math.ceil(total / limit);
 
     if (page > total_pages || page < 1) {
@@ -70,7 +68,7 @@ export class OrdersService {
 
     const prev_page = page > 1 ? page - 1 : null;
     const next_page = page < total_pages ? page + 1 : null;
-
+    console.log({ data, total_pages, prev_page, next_page, current_page: page })
     return { data, total_pages, prev_page, next_page, current_page: page };
   }
 
