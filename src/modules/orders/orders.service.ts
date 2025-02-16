@@ -1,4 +1,4 @@
-import * as ExcelJS from 'exceljs';
+
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 
 import {OrderRepository} from "../repositories/services/order.repository";
@@ -68,7 +68,6 @@ if (data.length ===0 ) {
 
     const prev_page = page > 1 ? page - 1 : null;
     const next_page = page < total_pages ? page + 1 : null;
-    console.log({ data, total_pages, prev_page, next_page, current_page: page })
     return { data, total_pages, prev_page, next_page, current_page: page };
   }
 
@@ -90,25 +89,13 @@ if (data.length ===0 ) {
         .getRawOne();
   }
 
-  public async exportToExcel(dto: PaginationDto, managerId: string): Promise<Buffer> {
+  public async exportToExcel(dto: PaginationDto, managerId: string): Promise<OrderPaginationResDto> {
 
-    const orders = await this.findAll(dto, managerId);
+    const fullDataDto = { ...dto, page: 1, limit: Number.MAX_SAFE_INTEGER };
 
-    if (!orders.data.length) {
-      throw new BadRequestException('No orders found for export');
-    }
+    return  await this.findAll(fullDataDto, managerId);
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Orders');
 
-    worksheet.columns = COLUMNS_NAME.orderExcelColumns;
-
-    orders.data.forEach((order) => {
-      worksheet.addRow(order);
-    });
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    return Buffer.from(buffer);
   }
   public async getOrderById (orderId: string) {
     const orderIdNumber = Number(orderId);
