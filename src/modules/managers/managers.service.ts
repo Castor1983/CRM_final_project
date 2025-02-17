@@ -53,8 +53,6 @@ try {
             })
         );
 
-
-
         return { orderStats,  data: managersWithStats };
     }
 

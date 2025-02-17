@@ -32,6 +32,7 @@ export class OrdersController {
     return this.ordersService.findAll(paginationDto, managerId);
   }
 
+
   @ApiBearerAuth()
   @ApiQuery({
     name: 'filters',
@@ -46,6 +47,8 @@ export class OrdersController {
     return  await this.ordersService.exportToExcel(paginationDto, managerId);
 
   }
+
+
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @Get('groups')
@@ -66,6 +69,8 @@ export class OrdersController {
   public async getOrderById (@Param('orderId') orderId: string) {
     return  this.ordersService.getOrderById(orderId)
 }
+
+
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
@@ -83,7 +88,6 @@ export class OrdersController {
     const {surname, managerId} = req.manager
     return  this.ordersService.updateOrder(dto, orderId, surname, managerId)
   }
-
 }
 
 

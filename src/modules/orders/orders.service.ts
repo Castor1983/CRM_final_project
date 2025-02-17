@@ -1,4 +1,3 @@
-
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 
 import {OrderRepository} from "../repositories/services/order.repository";
@@ -136,6 +135,7 @@ if (data.length ===0 ) {
     if (!Object.keys(dto).length) {
       throw new BadRequestException('No update values provided');
     }
+
     if (dto.group) {
       const isGroupUnique = await this.groupRepository.findOne({where: {name: dto.group}})
       if(!isGroupUnique){
@@ -147,10 +147,16 @@ if (data.length ===0 ) {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    if (order.manager === surname) {
-      await this.orderRepository.update(order.id, dto);
-    }else if (order.manager === null){
-      await this.orderRepository.update(order.id, {...dto, manager: surname, manager_: {id: managerId}});
+    if (dto.status === StatusEnum.NEW || dto.status === null) {
+      dto = { ...dto, manager: null, manager_: null };
+    }
+    if (order.manager === null && dto.status !== StatusEnum.NEW || dto.status !== null) {
+      await this.orderRepository.update(order.id, {
+        ...dto,
+        manager: surname,
+        manager_: { id: managerId }})
+      }else if (order.manager === surname || order.manager === null) {
+        await this.orderRepository.update(order.id, dto);
     } else {
       throw new BadRequestException ('Not enough rights')
     }
