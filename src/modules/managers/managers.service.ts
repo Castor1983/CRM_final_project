@@ -81,14 +81,9 @@ const payload = {managerId: manager.id, role: manager.role, surname: manager.sur
 }
 
 public async createPassword (token: string, dto: CreatePasswordDto) {
-
     const payload = await this.tokenService.verifyToken(token, TokenType.ACTIVATE);
-      if (dto.password === dto.confirmPassword) {
           const hashPassword = await bcrypt.hash(dto.password, 10);
            await this.managerRepository.update(payload.managerId, {password: hashPassword, is_active: true})
-      } else {
-          throw new BadRequestException ('Password and password confirmation do not match')
-      }
       return { message: 'Password create is successful'}
 }
 
