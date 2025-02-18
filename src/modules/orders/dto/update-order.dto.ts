@@ -1,6 +1,6 @@
 import { PartialType} from '@nestjs/mapped-types';
 
-import {IsEnum, IsInt, IsOptional, IsString} from "class-validator";
+import {IsEnum, IsInt, IsOptional, IsString, Matches} from "class-validator";
 import {OrderEntity} from "../../../database/entities/order.entity";
 import {CourseEnum} from "../../../database/enums/course.enum";
 import {CourseFormatEnum} from "../../../database/enums/courseFormat.enum";
@@ -47,6 +47,7 @@ export class UpdateOrderDto extends PartialType(OrderEntity) {
     @ApiProperty({required: false})
     @IsOptional()
     @IsString()
+    @Matches(/^0\d{9}$/, { message: 'Phone is not correct' })
     phone?: string;
 
     @ApiProperty({required: false})
