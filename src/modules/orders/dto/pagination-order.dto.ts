@@ -1,4 +1,4 @@
-import {IsBoolean, IsEnum, IsIn, IsInt, IsOptional, IsString, Min} from 'class-validator';
+import {IsBoolean, IsDateString, IsEnum, IsIn, IsInt, IsOptional, IsString, Min} from 'class-validator';
 import {Transform, Type} from 'class-transformer';
 import {OrderColumnsNameEnum} from "../../../database/enums/orderColumnsName.enum";
 import {CourseEnum} from "../../../database/enums/course.enum";
@@ -90,4 +90,14 @@ export class PaginationDto {
     @IsOptional()
     @IsIn(['ASC', 'DESC'])
     order?: 'ASC' | 'DESC';
+
+    @ApiPropertyOptional({ description: 'Start day', example: '2025-02-01' })
+    @IsOptional()
+    @IsDateString()
+    start_day?: string;
+
+    @ApiPropertyOptional({ description: 'End day', example: '2025-02-10' })
+    @IsOptional()
+    @IsDateString()
+    end_day?: string;
 }

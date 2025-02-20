@@ -23,7 +23,7 @@ export class OrdersService {
               private readonly groupRepository: GroupRepository,) {}
 
   public async findAll(paginationDto: PaginationDto, managerId: string): Promise<OrderPaginationResDto> {
-    const { page, limit, sort, order, ...filters } = paginationDto;
+    const { page, limit, sort, order, start_day, end_day, ...filters } = paginationDto;
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
     const allowedSortFields = COLUMNS_NAME.orderColumnsName;
     const allowedOrderFields = DESC_ASC;
@@ -46,6 +46,12 @@ export class OrdersService {
         }
       }
     });
+    if (start_day) {
+      queryBuilder.andWhere('order.created_at >= :start_day', { start_day });
+    }
+    if (end_day) {
+      queryBuilder.andWhere('order.created_at <= :end_day', { end_day });
+    }
 
     if (sort && order) {
       queryBuilder.orderBy(`order.${sort}`, order);

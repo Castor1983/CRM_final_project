@@ -32,7 +32,6 @@ export class OrdersController {
     return this.ordersService.findAll(paginationDto, managerId);
   }
 
-
   @ApiBearerAuth()
   @ApiQuery({
     name: 'filters',
