@@ -153,7 +153,6 @@ if (data.length ===0 ) {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
-    console.log(dto)
     if (dto.status === StatusEnum.NEW || dto.status === null) {
       dto = { ...dto, manager: null, manager_: null };
     }
