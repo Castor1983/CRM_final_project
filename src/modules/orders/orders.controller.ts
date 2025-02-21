@@ -85,7 +85,6 @@ export class OrdersController {
   @Patch('edit/:orderId')
   public async updateOrder (@Body() dto: UpdateOrderDto, @Param('orderId') orderId: string, @Req() req: CustomRequest) {
     const {surname, managerId} = req.manager
-    console.log(dto)
     return  this.ordersService.updateOrder(dto, orderId, surname, managerId)
   }
 }
