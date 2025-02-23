@@ -153,10 +153,11 @@ if (data.length ===0 ) {
     if (!order) {
       throw new NotFoundException('Order not found');
     }
+
     if (dto.status === StatusEnum.NEW || dto.status === null) {
       dto = { ...dto, manager: null, manager_: null };
     }
-    if (order.manager === null && dto.status !== StatusEnum.NEW || dto.status !== null) {
+    if (order.manager === null && (dto.status !== StatusEnum.NEW && dto.status !== null)) {
       await this.orderRepository.update(order.id, {
         ...dto,
         manager: surname,
