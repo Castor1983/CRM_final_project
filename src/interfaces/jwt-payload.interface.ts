@@ -1,4 +1,4 @@
-import {ManagerRole} from "../database/enums/managerRole.enum";
+import { ManagerRole } from "../database/enums/managerRole.enum";
 
 export interface IJwtPayload {
   managerId: string;

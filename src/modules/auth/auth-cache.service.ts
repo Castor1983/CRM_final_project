@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config/dist/config.service';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config/dist/config.service";
 
-import { Config, JwtConfig } from '../../configs/config.type';
-import { RedisService } from '../redis/redis.service';
+import { Config, JwtConfig } from "../../configs/config.type";
+import { RedisService } from "../redis/redis.service";
 
 @Injectable()
 export class AuthCacheService {
@@ -12,13 +12,10 @@ export class AuthCacheService {
     private readonly redisService: RedisService,
     private readonly configService: ConfigService<Config>,
   ) {
-    this.jwtConfig = this.configService.get('jwt');
+    this.jwtConfig = this.configService.get("jwt");
   }
 
-  public async saveToken(
-    token: string,
-    managerId: string,
-  ): Promise<void> {
+  public async saveToken(token: string, managerId: string): Promise<void> {
     const key = this.getKey(managerId);
 
     await this.redisService.deleteByKey(key);
@@ -36,7 +33,6 @@ export class AuthCacheService {
   }
 
   public async deleteToken(managerId: string): Promise<void> {
-
     const key = this.getKey(managerId);
     await this.redisService.deleteByKey(key);
   }

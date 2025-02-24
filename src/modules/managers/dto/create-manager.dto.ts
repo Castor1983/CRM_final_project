@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {  IsString, Length, Matches } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString, Length, Matches } from "class-validator";
 
 export class ManagerCreateDto {
   @ApiProperty()
@@ -12,10 +12,9 @@ export class ManagerCreateDto {
   @Length(0, 300)
   surname: string;
 
-  @ApiProperty({ example: 'test@gmail.com' })
+  @ApiProperty({ example: "test@gmail.com" })
   @IsString()
   @Length(0, 300)
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
   email: string;
-
 }

@@ -1,47 +1,84 @@
-export default {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: 'tsconfig.json',
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
-  },
-  plugins: ["@typescript-eslint/eslint-plugin", "simple-import-sort", "import"],
-  extends: [
-    "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-  ],
-  root: true,
-  env: {
-    node: true,
-    jest: true,
-  },
-  rules: {  indent: ["error", 2, { "SwitchCase": 1 }],
-    quotes: ["error", "double"],
-    semi: ["error", "always"],
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "req|res|next" }],
-    "@typescript-eslint/return-await": ["error", "always"],
-    "simple-import-sort/imports": "error",
-    "import/first": "error",
-    "import/newline-after-import": ["error", { count: 1 }],
-    "import/no-duplicates": "error",
-    "prettier/prettier": ["error", { endOfLine: "auto" }],
-    "no-console": "warn",
-    "sort-imports": [
-  "error",
+import js from '@eslint/js';
+import typescript from '@typescript-eslint/eslint-plugin';
+import parser from '@typescript-eslint/parser';
+import importPlugin from 'eslint-plugin-import';
+import prettier from 'eslint-plugin-prettier';
+import globals from 'globals';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default [
+  js.configs.recommended,
   {
-    "ignoreCase": true,
-    "ignoreDeclarationSort": true,
-    "ignoreMemberSort": false,
-    "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
-    "allowSeparatedGroups": false,
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+      parser,
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
+    },
+    plugins: {
+      prettier,
+      '@typescript-eslint': typescript,
+      import: importPlugin,
+    },
+    rules: {
+      ...prettier.configs.recommended.rules,
+      'prettier/prettier': [
+        'error',
+        {
+          tabWidth: 2,
+          useTabs: false,
+          semi: true,
+          singleQuote: true,
+          trailingComma: 'all',
+          printWidth: 80,
+          arrowParens: 'avoid',
+          bracketSpacing: true,
+        },
+      ],
+      'no-unused-vars': 'off',
+      'import/order': [
+        'error',
+        {
+          groups: [
+            ['builtin'],
+            ['external'],
+            ['internal'],
+            ['parent', 'sibling', 'index'],
+          ],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+          'newlines-between': 'always',
+        },
+      ],
+      'import/no-duplicates': 'error',
+      'import/first': 'error',
+      'import/no-unresolved': 'error',
+
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/ban-types': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+      'class-methods-use-this': 'off',
+    },
   },
-],
-},
-ignorePatterns: ['.eslintrc.js', '/dist', '/data'],
-};
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
+  },
+];

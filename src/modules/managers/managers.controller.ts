@@ -1,26 +1,27 @@
 import {
   Body,
-  Controller, Get, HttpCode, Param, Patch,
-  Post, UseGuards,
-} from '@nestjs/common';
-import { ManagersService } from './managers.service';
-import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {ManagerCreateDto} from "./dto/create-manager.dto";
-import {RolesGuard} from "../../guards/roles.guard";
-import {ManagerRole} from "../../database/enums/managerRole.enum";
-import {Roles} from "../../decorators/roles.decorator";
-import {CreatePasswordDto} from "./dto/createPassword.dto";
-import {SkipAuth} from "../../decorators/skip-auth.decorator";
-import {UniqueEmailGuard} from "../../guards/unique-email.guard";
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
+import { ManagersService } from "./managers.service";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ManagerCreateDto } from "./dto/create-manager.dto";
+import { RolesGuard } from "../../guards/roles.guard";
+import { ManagerRole } from "../../database/enums/managerRole.enum";
+import { Roles } from "../../decorators/roles.decorator";
+import { CreatePasswordDto } from "./dto/createPassword.dto";
+import { SkipAuth } from "../../decorators/skip-auth.decorator";
+import { UniqueEmailGuard } from "../../guards/unique-email.guard";
 
-
-
-@ApiTags('Managers')
-@Controller('managers')
-
+@ApiTags("Managers")
+@Controller("managers")
 export class ManagersController {
-  constructor(private readonly managersService: ManagersService,
-             ) {}
+  constructor(private readonly managersService: ManagersService) {}
 
   @ApiBearerAuth()
   @UseGuards(RolesGuard, UniqueEmailGuard)
@@ -40,42 +41,42 @@ export class ManagersController {
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles(ManagerRole.ADMIN)
-  @Post('activate/manager/:managerId')
+  @Post("activate/manager/:managerId")
   @HttpCode(200)
-  async activateManager(@Param('managerId') managerId: string) {
+  async activateManager(@Param("managerId") managerId: string) {
     return this.managersService.activate(managerId);
-
   }
   @SkipAuth()
-  @Post('activate/:activateToken')
+  @Post("activate/:activateToken")
   @HttpCode(200)
-  async createPassword( @Param('activateToken') activateToken: string, @Body() dto: CreatePasswordDto) {
+  async createPassword(
+    @Param("activateToken") activateToken: string,
+    @Body() dto: CreatePasswordDto,
+  ) {
     return this.managersService.createPassword(activateToken, dto);
-
   }
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles(ManagerRole.ADMIN)
-  @Post('deactivate/:managerId')
+  @Post("deactivate/:managerId")
   @HttpCode(200)
-  async recoveryPassword(@Param('managerId') managerId: string) {
+  async recoveryPassword(@Param("managerId") managerId: string) {
     return this.managersService.recoveryPassword(managerId);
-
   }
 
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles(ManagerRole.ADMIN)
-  @Patch('ban/:managerId')
-  async banManager(@Param('managerId') managerId: string,) {
+  @Patch("ban/:managerId")
+  async banManager(@Param("managerId") managerId: string) {
     return this.managersService.banManager(managerId);
   }
 
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles(ManagerRole.ADMIN)
-  @Patch('unban/:managerId')
-  async unbanManager(@Param('managerId') managerId: string) {
+  @Patch("unban/:managerId")
+  async unbanManager(@Param("managerId") managerId: string) {
     return this.managersService.unbanManager(managerId);
   }
 }

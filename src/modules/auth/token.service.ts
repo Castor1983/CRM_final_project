@@ -1,12 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config/dist/config.service';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config/dist/config.service";
+import { JwtService } from "@nestjs/jwt";
 
-import { Config, JwtConfig } from '../../configs/config.type';
-import { TokenType } from '../../database/enums/token-type.enum';
-import { IJwtPayload } from '../../interfaces/jwt-payload.interface';
-import { ITokenPair } from '../../interfaces/token-pair.interface';
-import {ITokenActivate} from "../../interfaces/token-activate.interface";
+import { Config, JwtConfig } from "../../configs/config.type";
+import { TokenType } from "../../database/enums/token-type.enum";
+import { IJwtPayload } from "../../interfaces/jwt-payload.interface";
+import { ITokenPair } from "../../interfaces/token-pair.interface";
+import { ITokenActivate } from "../../interfaces/token-activate.interface";
 
 @Injectable()
 export class TokenService {
@@ -16,7 +16,7 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Config>,
   ) {
-    this.jwtConfig = configService.get<JwtConfig>('jwt');
+    this.jwtConfig = configService.get<JwtConfig>("jwt");
   }
 
   public async generateAuthTokens(payload: IJwtPayload): Promise<ITokenPair> {
@@ -31,13 +31,15 @@ export class TokenService {
 
     return { accessToken, refreshToken };
   }
-public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate> {
+  public async generateActivateToken(
+    payload: IJwtPayload,
+  ): Promise<ITokenActivate> {
     const activateToken = await this.jwtService.signAsync(payload, {
       secret: this.jwtConfig.activateSecret,
       expiresIn: this.jwtConfig.activateExpiresIn,
-    })
-  return {activateToken}
-}
+    });
+    return { activateToken };
+  }
 
   public async verifyToken(
     token: string,
@@ -47,9 +49,8 @@ public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate
       return await this.jwtService.verifyAsync(token, {
         secret: this.getSecret(type),
       });
-
     } catch (error) {
-      throw new UnauthorizedException('Invalid token', error);
+      throw new UnauthorizedException("Invalid token", error);
     }
   }
 
@@ -62,11 +63,11 @@ public async generateActivateToken(payload: IJwtPayload): Promise<ITokenActivate
       case TokenType.REFRESH:
         secret = this.jwtConfig.refreshSecret;
         break;
-        case TokenType.ACTIVATE:
+      case TokenType.ACTIVATE:
         secret = this.jwtConfig.activateSecret;
         break;
       default:
-        throw new Error('Unknown token type');
+        throw new Error("Unknown token type");
     }
     return secret;
   }
