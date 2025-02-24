@@ -14,6 +14,14 @@ const __dirname = dirname(__filename);
 export default [
   js.configs.recommended,
   {
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
+      },
+    },
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
@@ -22,8 +30,7 @@ export default [
       },
       parser,
       parserOptions: {
-        alwaysTryTypes: true,
-        project: './tsconfig.json',
+        project: `${__dirname}/tsconfig.json`,
         tsconfigRootDir: __dirname,
       },
     },

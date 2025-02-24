@@ -18,6 +18,7 @@ import { PaginationDto } from './dto/pagination-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrdersService } from './orders.service';
 import { JwtAccessGuard } from '../../guards/jwt-access.guard';
+import { CustomRequest } from '../../interfaces/customReq.interface';
 
 @Controller('orders')
 export class OrdersController {

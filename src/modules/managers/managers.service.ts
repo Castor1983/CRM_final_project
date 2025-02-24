@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import * as bcrypt from 'bcryptjs';
+
 import { ManagerEntity } from 'src/database/entities/manager.entity';
 
 import { ManagerCreateDto } from './dto/create-manager.dto';

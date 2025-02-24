@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ManagerEntity } from 'src/database/entities/manager.entity';
 import { DataSource, Repository } from 'typeorm';
+
+import { ManagerEntity } from 'src/database/entities/manager.entity';
 
 @Injectable()
 export class ManagerRepository extends Repository<ManagerEntity> {

@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
 import { JwtRefreshGuard } from 'src/guards/jwt-refresh.guard';
 import { IManagerData } from 'src/interfaces/manager-data.interface';
 

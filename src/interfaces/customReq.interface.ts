@@ -1,4 +1,4 @@
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
   manager?: {
     managerId: string;
     email: string;
