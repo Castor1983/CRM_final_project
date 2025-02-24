@@ -1,6 +1,6 @@
-import { IJwtPayload } from "../../interfaces/jwt-payload.interface";
-import { ManagerEntity } from "../../database/entities/manager.entity";
-import { IManagerData } from "../../interfaces/manager-data.interface";
+import { ManagerEntity } from '../../database/entities/manager.entity';
+import { IJwtPayload } from '../../interfaces/jwt-payload.interface';
+import { IManagerData } from '../../interfaces/manager-data.interface';
 
 export class ManagerMapper {
   public static toIManagerData(

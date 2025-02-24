@@ -3,9 +3,9 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
-} from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { Observable } from "rxjs";
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -15,7 +15,7 @@ export class RolesGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const requiredRole = this.reflector.get<string[]>(
-      "role",
+      'role',
       context.getHandler(),
     );
     if (!requiredRole) {
@@ -26,12 +26,12 @@ export class RolesGuard implements CanActivate {
     const manager = request.manager;
 
     if (!manager || !manager.role) {
-      throw new ForbiddenException("Access denied: Manager role not found");
+      throw new ForbiddenException('Access denied: Manager role not found');
     }
 
     const role = manager.role;
     if (role !== requiredRole) {
-      throw new ForbiddenException("Access denied: Insufficient rights");
+      throw new ForbiddenException('Access denied: Insufficient rights');
     }
 
     return role;

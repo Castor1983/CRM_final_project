@@ -4,22 +4,22 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
-} from "@nestjs/common";
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config/dist/config.service';
+import * as bcrypt from 'bcryptjs';
+import { ManagerEntity } from 'src/database/entities/manager.entity';
 
-import { ManagerCreateDto } from "./dto/create-manager.dto";
-import { ManagerEntity } from "src/database/entities/manager.entity";
-import { ManagerRepository } from "../repositories/services/manager.repository";
-import { TokenService } from "../auth/token.service";
-import { ConfigService } from "@nestjs/config/dist/config.service";
-import { ClientConfig, Config } from "../../configs/config.type";
-import { IActivateManager } from "../../interfaces/activate-manager.interface";
-import { CreatePasswordDto } from "./dto/createPassword.dto";
-import { TokenType } from "../../database/enums/token-type.enum";
-import * as bcrypt from "bcryptjs";
-import { DescAscEnum } from "../../database/enums/desc-asc.enum";
-import { ManagerPaginationResDto } from "./dto/manager-pagination.res.dto";
-import { OrdersService } from "../orders/orders.service";
-import { ManagerRole } from "../../database/enums/managerRole.enum";
+import { ManagerCreateDto } from './dto/create-manager.dto';
+import { CreatePasswordDto } from './dto/createPassword.dto';
+import { ManagerPaginationResDto } from './dto/manager-pagination.res.dto';
+import { ClientConfig, Config } from '../../configs/config.type';
+import { DescAscEnum } from '../../database/enums/desc-asc.enum';
+import { ManagerRole } from '../../database/enums/managerRole.enum';
+import { TokenType } from '../../database/enums/token-type.enum';
+import { IActivateManager } from '../../interfaces/activate-manager.interface';
+import { TokenService } from '../auth/token.service';
+import { OrdersService } from '../orders/orders.service';
+import { ManagerRepository } from '../repositories/services/manager.repository';
 
 @Injectable()
 export class ManagersService {
@@ -30,7 +30,7 @@ export class ManagersService {
     private readonly ordersService: OrdersService,
     private readonly configService: ConfigService<Config>,
   ) {
-    this.clientConfig = configService.get<ClientConfig>("client");
+    this.clientConfig = configService.get<ClientConfig>('client');
   }
 
   public async create(dto: ManagerCreateDto): Promise<ManagerEntity> {
@@ -44,16 +44,16 @@ export class ManagersService {
     }
   }
   public async getAll(): Promise<ManagerPaginationResDto> {
-    const queryBuilder = this.managerRepository.createQueryBuilder("manager");
+    const queryBuilder = this.managerRepository.createQueryBuilder('manager');
 
     queryBuilder.orderBy({ id: DescAscEnum.DESC });
 
     const managers = await queryBuilder
-      .where("manager.role != :role", { role: ManagerRole.ADMIN })
+      .where('manager.role != :role', { role: ManagerRole.ADMIN })
       .getMany();
     const orderStats = await this.ordersService.getOrderStats();
     const managersWithStats = await Promise.all(
-      managers.map(async (manager) => {
+      managers.map(async manager => {
         const orderStats = await this.ordersService.getOrderStatsByManager(
           manager.id,
         );
@@ -68,10 +68,10 @@ export class ManagersService {
     const manager = await this.managerRepository.findOneBy({ id: dto });
 
     if (!manager) {
-      throw new NotFoundException("Manager not found");
+      throw new NotFoundException('Manager not found');
     }
     if (manager.is_active) {
-      throw new HttpException("Manager is active", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Manager is active', HttpStatus.BAD_REQUEST);
     }
 
     const payload = {
@@ -84,7 +84,7 @@ export class ManagersService {
     const activationLink = `http://${this.clientConfig.host}:${this.clientConfig.port}/managers/activate/${activateToken}`;
 
     return {
-      message: "Activation link has been generated and copied to clipboard",
+      message: 'Activation link has been generated and copied to clipboard',
       activationLink,
       activateToken,
     };
@@ -100,7 +100,7 @@ export class ManagersService {
       password: hashPassword,
       is_active: true,
     });
-    return { message: "Password create is successful" };
+    return { message: 'Password create is successful' };
   }
 
   public async recoveryPassword(dto: string) {
@@ -108,7 +108,7 @@ export class ManagersService {
       is_active: false,
     });
     if (!manager) {
-      throw new NotFoundException("Manager not found");
+      throw new NotFoundException('Manager not found');
     }
     return await this.activate(dto);
   }
@@ -118,10 +118,10 @@ export class ManagersService {
       where: { id: managerId },
     });
     if (!manager) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
     if (manager.role === ManagerRole.ADMIN) {
-      throw new BadRequestException("Admin can not banned or unbanned");
+      throw new BadRequestException('Admin can not banned or unbanned');
     }
     manager.is_banned = false;
     manager.is_active = true;
@@ -133,10 +133,10 @@ export class ManagersService {
       where: { id: managerId },
     });
     if (!manager) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
     if (manager.role === ManagerRole.ADMIN) {
-      throw new BadRequestException("Admin can not banned");
+      throw new BadRequestException('Admin can not banned');
     }
     manager.is_banned = true;
     manager.is_active = false;
@@ -147,7 +147,7 @@ export class ManagersService {
       where: { email: managerEmail },
     });
     if (!manager) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
 
     return manager.is_banned;

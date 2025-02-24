@@ -9,25 +9,26 @@ import {
   Query,
   Req,
   UseGuards,
-} from "@nestjs/common";
-import { OrdersService } from "./orders.service";
-import { PaginationDto } from "./dto/pagination-order.dto";
-import { ApiBearerAuth, ApiQuery } from "@nestjs/swagger";
-import { JwtAccessGuard } from "../../guards/jwt-access.guard";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateOrderDto } from "./dto/update-order.dto";
-import { CreateGroupDto } from "./dto/create-group.dto";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
-@Controller("orders")
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateGroupDto } from './dto/create-group.dto';
+import { PaginationDto } from './dto/pagination-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrdersService } from './orders.service';
+import { JwtAccessGuard } from '../../guards/jwt-access.guard';
+
+@Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @ApiBearerAuth()
   @ApiQuery({
-    name: "filters",
+    name: 'filters',
     type: PaginationDto,
     required: false,
-    description: "Filters for orders",
+    description: 'Filters for orders',
   })
   @UseGuards(JwtAccessGuard)
   @Get()
@@ -38,13 +39,13 @@ export class OrdersController {
 
   @ApiBearerAuth()
   @ApiQuery({
-    name: "filters",
+    name: 'filters',
     type: PaginationDto,
     required: false,
-    description: "Filters for orders",
+    description: 'Filters for orders',
   })
   @UseGuards(JwtAccessGuard)
-  @Get("export")
+  @Get('export')
   public async exportOrders(
     @Query() paginationDto: PaginationDto,
     @Req() req: CustomRequest,
@@ -55,31 +56,31 @@ export class OrdersController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
-  @Get("groups")
+  @Get('groups')
   async getAllGroups() {
     return this.ordersService.getAllGroups();
   }
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
-  @Post("groups")
+  @Post('groups')
   async createGroup(@Body() dto: CreateGroupDto) {
     return this.ordersService.createGroup(dto);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
-  @Get(":orderId")
-  public async getOrderById(@Param("orderId") orderId: string) {
+  @Get(':orderId')
+  public async getOrderById(@Param('orderId') orderId: string) {
     return this.ordersService.getOrderById(orderId);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
-  @Post("addComment/:orderId")
+  @Post('addComment/:orderId')
   public async createComment(
     @Body() dto: CreateCommentDto,
-    @Param("orderId") orderId: string,
+    @Param('orderId') orderId: string,
     @Req() req: CustomRequest,
   ) {
     const { managerId, surname } = req.manager;
@@ -89,10 +90,10 @@ export class OrdersController {
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
-  @Patch("edit/:orderId")
+  @Patch('edit/:orderId')
   public async updateOrder(
     @Body() dto: UpdateOrderDto,
-    @Param("orderId") orderId: string,
+    @Param('orderId') orderId: string,
     @Req() req: CustomRequest,
   ) {
     const { surname, managerId } = req.manager;

@@ -1,13 +1,14 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import * as bcrypt from "bcryptjs";
-import { SignInReqDto } from "./dto/sign-in.req.dto";
-import { ManagerRepository } from "../repositories/services/manager.repository";
-import { TokenPairResDto } from "./dto/token-pair.res.dto";
-import { TokenService } from "./token.service";
-import { RefreshTokenRepository } from "../repositories/services/refresh-token.repository";
-import { IManagerData } from "../../interfaces/manager-data.interface";
-import { AuthCacheService } from "./auth-cache.service";
-import { AuthResDto } from "./dto/auth.res.dto";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
+
+import { AuthCacheService } from './auth-cache.service';
+import { AuthResDto } from './dto/auth.res.dto';
+import { SignInReqDto } from './dto/sign-in.req.dto';
+import { TokenPairResDto } from './dto/token-pair.res.dto';
+import { TokenService } from './token.service';
+import { IManagerData } from '../../interfaces/manager-data.interface';
+import { ManagerRepository } from '../repositories/services/manager.repository';
+import { RefreshTokenRepository } from '../repositories/services/refresh-token.repository';
 
 @Injectable()
 export class AuthService {

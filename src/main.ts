@@ -1,19 +1,20 @@
-import { NestFactory } from "@nestjs/core";
-import * as cors from "cors";
-import { Logger, ValidationPipe } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { AppModule } from "./app.module";
-import { ManagerRole } from "./database/enums/managerRole.enum";
-import { AdminConfig, AppConfig } from "./configs/config.type";
-import * as bcrypt from "bcryptjs";
-import { ManagerRepository } from "./modules/repositories/services/manager.repository";
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bcrypt from 'bcryptjs';
+import * as cors from 'cors';
+
+import { AppModule } from './app.module';
+import { AdminConfig, AppConfig } from './configs/config.type';
+import { ManagerRole } from './database/enums/managerRole.enum';
+import { ManagerRepository } from './modules/repositories/services/manager.repository';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const appConfig = configService.get<AppConfig>("app");
-  app.setGlobalPrefix("/api");
+  const appConfig = configService.get<AppConfig>('app');
+  app.setGlobalPrefix('/api');
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,25 +24,25 @@ async function bootstrap() {
   );
   app.use(
     cors({
-      origin: "http://localhost:5173",
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      origin: 'http://localhost:5173',
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       credentials: true,
     }),
   );
 
   const config = new DocumentBuilder()
-    .setTitle("CRM programming school")
-    .setDescription("The may-2024 API description")
-    .setVersion("1.0")
+    .setTitle('CRM programming school')
+    .setDescription('The may-2024 API description')
+    .setVersion('1.0')
     .addBearerAuth({
-      type: "http",
-      scheme: "bearer",
-      bearerFormat: "JWT",
-      in: "header",
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      in: 'header',
     })
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api/doc", app, documentFactory, {
+  SwaggerModule.setup('api/doc', app, documentFactory, {
     swaggerOptions: {
       persistAuthorization: true,
       defaultModelsExpandDepth: 7,
@@ -54,13 +55,13 @@ async function bootstrap() {
       role: ManagerRole.ADMIN,
     });
     if (findSuperManager) {
-      Logger.log("SuperAdmin found in the base");
+      Logger.log('SuperAdmin found in the base');
     }
     if (!findSuperManager) {
-      const config = configService.get<AdminConfig>("admin");
+      const config = configService.get<AdminConfig>('admin');
       const dto = {
-        name: "Admin",
-        surname: "Admin",
+        name: 'Admin',
+        surname: 'Admin',
         email: config.email,
         password: config.password,
         is_active: true,
@@ -70,7 +71,7 @@ async function bootstrap() {
       await managerRepository.save(
         managerRepository.create({ ...dto, password }),
       );
-      Logger.log("SuperAdmin save in the base successfully");
+      Logger.log('SuperAdmin save in the base successfully');
     }
     Logger.log(`Server running on http://${appConfig.host}:${appConfig.port}`);
     Logger.log(

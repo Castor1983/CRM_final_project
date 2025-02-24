@@ -1,12 +1,12 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config/dist/config.service";
-import { JwtService } from "@nestjs/jwt";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config/dist/config.service';
+import { JwtService } from '@nestjs/jwt';
 
-import { Config, JwtConfig } from "../../configs/config.type";
-import { TokenType } from "../../database/enums/token-type.enum";
-import { IJwtPayload } from "../../interfaces/jwt-payload.interface";
-import { ITokenPair } from "../../interfaces/token-pair.interface";
-import { ITokenActivate } from "../../interfaces/token-activate.interface";
+import { Config, JwtConfig } from '../../configs/config.type';
+import { TokenType } from '../../database/enums/token-type.enum';
+import { IJwtPayload } from '../../interfaces/jwt-payload.interface';
+import { ITokenActivate } from '../../interfaces/token-activate.interface';
+import { ITokenPair } from '../../interfaces/token-pair.interface';
 
 @Injectable()
 export class TokenService {
@@ -16,7 +16,7 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<Config>,
   ) {
-    this.jwtConfig = configService.get<JwtConfig>("jwt");
+    this.jwtConfig = configService.get<JwtConfig>('jwt');
   }
 
   public async generateAuthTokens(payload: IJwtPayload): Promise<ITokenPair> {
@@ -50,7 +50,7 @@ export class TokenService {
         secret: this.getSecret(type),
       });
     } catch (error) {
-      throw new UnauthorizedException("Invalid token", error);
+      throw new UnauthorizedException('Invalid token', error);
     }
   }
 
@@ -67,7 +67,7 @@ export class TokenService {
         secret = this.jwtConfig.activateSecret;
         break;
       default:
-        throw new Error("Unknown token type");
+        throw new Error('Unknown token type');
     }
     return secret;
   }

@@ -1,4 +1,4 @@
-import { OrderEntity } from "../../../database/entities/order.entity";
+import { OrderEntity } from '../../../database/entities/order.entity';
 
 export class OrderPaginationResDto {
   data: OrderEntity[];

@@ -1,16 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
-import { ConfigService } from "@nestjs/config";
-import { MysqlConfig } from "../configs/config.type";
-import * as path from "node:path";
+import * as path from 'node:path';
+
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+
+import { MysqlConfig } from '../configs/config.type';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    const msqlConfig = this.configService.get<MysqlConfig>("mysql");
+    const msqlConfig = this.configService.get<MysqlConfig>('mysql');
     return {
-      type: "mysql",
+      type: 'mysql',
       host: msqlConfig.host,
       port: msqlConfig.port,
       username: msqlConfig.user,
@@ -19,21 +21,21 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [
         path.join(
           process.cwd(),
-          "dist",
-          "src",
-          "database",
-          "entities",
-          "*.entity.js",
+          'dist',
+          'src',
+          'database',
+          'entities',
+          '*.entity.js',
         ),
       ],
       migrations: [
         path.join(
           process.cwd(),
-          "dist",
-          "src",
-          "database",
-          "migrations",
-          "*.js",
+          'dist',
+          'src',
+          'database',
+          'migrations',
+          '*.js',
         ),
       ],
       migrationsRun: false,

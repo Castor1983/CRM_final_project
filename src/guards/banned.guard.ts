@@ -3,8 +3,9 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
-} from "@nestjs/common";
-import { ManagersService } from "../modules/managers/managers.service";
+} from '@nestjs/common';
+
+import { ManagersService } from '../modules/managers/managers.service';
 
 @Injectable()
 export class BanGuard implements CanActivate {
@@ -16,12 +17,12 @@ export class BanGuard implements CanActivate {
     const manager = request.body.email;
 
     if (!manager) {
-      throw new UnauthorizedException("Manager not authenticated");
+      throw new UnauthorizedException('Manager not authenticated');
     }
 
     const isBanned = await this.managersService.isManagerBanned(manager);
     if (isBanned) {
-      throw new UnauthorizedException("Manager is banned");
+      throw new UnauthorizedException('Manager is banned');
     }
 
     return true;
