@@ -47,7 +47,7 @@ export class ManagersService {
   public async getAll(): Promise<ManagerPaginationResDto> {
     const queryBuilder = this.managerRepository.createQueryBuilder('manager');
 
-    queryBuilder.orderBy({ id: DescAscEnum.DESC });
+    queryBuilder.orderBy({ created: DescAscEnum.DESC });
 
     const managers = await queryBuilder
       .where('manager.role != :role', { role: ManagerRole.ADMIN })
