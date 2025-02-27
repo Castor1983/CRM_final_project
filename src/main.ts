@@ -3,10 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as bcrypt from 'bcryptjs';
-import * as cors from 'cors';
 
 import { AppModule } from './app.module';
-import { AdminConfig, AppConfig, ClientConfig } from './configs/config.type';
+import { AdminConfig, AppConfig } from './configs/config.type';
 import { ManagerRole } from './database/enums/managerRole.enum';
 import { ManagerRepository } from './modules/repositories/services/manager.repository';
 
@@ -14,7 +13,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const appConfig = configService.get<AppConfig>('app');
-  const clientConfig = configService.get<ClientConfig>('client');
   app.setGlobalPrefix('/api');
 
   app.useGlobalPipes(
@@ -23,13 +21,11 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.use(
-    cors({
-      origin: `http://${clientConfig.host}:${clientConfig.port}`,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-      credentials: true,
-    }),
-  );
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('CRM programming school')
