@@ -3,7 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import * as bcrypt from 'bcryptjs';
@@ -69,7 +69,7 @@ export class ManagersService {
     const manager = await this.managerRepository.findOneBy({ id: dto });
 
     if (!manager) {
-      throw new NotFoundException('Manager not found');
+      throw new UnauthorizedException();
     }
     if (manager.is_active) {
       throw new HttpException('Manager is active', HttpStatus.BAD_REQUEST);
@@ -109,7 +109,7 @@ export class ManagersService {
       is_active: false,
     });
     if (!manager) {
-      throw new NotFoundException('Manager not found');
+      throw new UnauthorizedException();
     }
     return await this.activate(dto);
   }
@@ -119,7 +119,7 @@ export class ManagersService {
       where: { id: managerId },
     });
     if (!manager) {
-      throw new NotFoundException('User not found');
+      throw new UnauthorizedException();
     }
     if (manager.role === ManagerRole.ADMIN) {
       throw new BadRequestException('Admin can not banned or unbanned');
@@ -134,7 +134,7 @@ export class ManagersService {
       where: { id: managerId },
     });
     if (!manager) {
-      throw new NotFoundException('User not found');
+      throw new UnauthorizedException();
     }
     if (manager.role === ManagerRole.ADMIN) {
       throw new BadRequestException('Admin can not banned');
@@ -148,7 +148,7 @@ export class ManagersService {
       where: { email: managerEmail },
     });
     if (!manager) {
-      throw new NotFoundException('User not found');
+      throw new UnauthorizedException();
     }
 
     return manager.is_banned;
