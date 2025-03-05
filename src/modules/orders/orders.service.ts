@@ -54,6 +54,15 @@ export class OrdersService {
           );
         } else if (['manager'].includes(key)) {
           queryBuilder.andWhere('order.manager_id = :managerId', { managerId });
+        } else if (key === 'status') {
+          if (value === 'New') {
+            queryBuilder.andWhere(
+              '(order.status = :status OR order.status IS NULL)',
+              { status: value },
+            );
+          } else {
+            queryBuilder.andWhere('order.status = :status', { status: value });
+          }
         } else {
           queryBuilder.andWhere(`order.${key} = :${key}`, { [key]: value });
         }
