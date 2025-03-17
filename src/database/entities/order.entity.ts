@@ -9,10 +9,6 @@ import {
 
 import { CommentEntity } from './comment.entity';
 import { ManagerEntity } from './manager.entity';
-import { CourseEnum } from '../enums/course.enum';
-import { CourseFormatEnum } from '../enums/courseFormat.enum';
-import { CourseTypeEnum } from '../enums/courseType.enum';
-import { StatusEnum } from '../enums/status.enum';
 import { TableNameEnum } from '../enums/table-name.enum';
 
 @Entity(TableNameEnum.ORDERS)
@@ -35,22 +31,17 @@ export class OrderEntity {
   @Column('int', { nullable: true, default: null })
   age: number;
 
-  @Column({ type: 'enum', enum: CourseEnum, nullable: true, default: null })
-  course: CourseEnum;
+  @Column('varchar', { length: 10, nullable: true, default: null })
+  course: string;
 
-  @Column({
-    type: 'enum',
-    enum: CourseFormatEnum,
-    nullable: true,
-    default: null,
-  })
-  course_format: CourseFormatEnum;
+  @Column('varchar', { length: 15, nullable: true, default: null })
+  course_format: string;
 
-  @Column({ type: 'enum', enum: CourseTypeEnum, nullable: true, default: null })
-  course_type: CourseTypeEnum;
+  @Column('varchar', { length: 100, nullable: true, default: null })
+  course_type: string;
 
-  @Column({ type: 'enum', enum: StatusEnum, nullable: true, default: null })
-  status: StatusEnum;
+  @Column('varchar', { length: 15, nullable: true, default: null })
+  status: string;
 
   @Column('int', { nullable: true, default: null })
   sum: number;
