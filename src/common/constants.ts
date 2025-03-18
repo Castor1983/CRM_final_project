@@ -15,6 +15,8 @@ export const COLUMNS_NAME = {
     'created_at',
     'utm',
     'msg',
+    'group',
+    'manager',
   ],
   orderSearchTitle: ['name', 'surname', 'email', 'phone', 'age'],
   orderExcelColumns: [

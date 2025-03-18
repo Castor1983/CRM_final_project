@@ -78,7 +78,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
-  @Post('addComment/:orderId')
+  @Post('comment/:orderId')
   public async createComment(
     @Body() dto: CreateCommentDto,
     @Param('orderId') orderId: string,
@@ -91,7 +91,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @UseGuards(JwtAccessGuard)
   @HttpCode(200)
-  @Patch('edit/:orderId')
+  @Patch(':orderId')
   public async updateOrder(
     @Body() dto: UpdateOrderDto,
     @Param('orderId') orderId: string,
