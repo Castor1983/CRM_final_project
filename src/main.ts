@@ -3,9 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as bcrypt from 'bcryptjs';
+import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { AdminConfig, AppConfig } from './configs/config.type';
+import { AdminConfig, AppConfig, ClientConfig } from './configs/config.type';
 import { ManagerRole } from './database/enums/managerRole.enum';
 import { ManagerRepository } from './modules/repositories/services/manager.repository';
 
@@ -13,6 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const appConfig = configService.get<AppConfig>('app');
+  const clientConfig = configService.get<ClientConfig>('client');
   app.setGlobalPrefix('/api');
 
   app.useGlobalPipes(
@@ -21,8 +23,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.use(cookieParser());
   app.enableCors({
-    origin: '*',
+    origin: `http://${clientConfig.host}:${clientConfig.port}`,
+    credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
   });
