@@ -291,7 +291,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Alex\",\n    \"surname\": \"Bavta\",\n    \"email\": \"51113d221manager@gmail.com\"\n    \n\n}",
+							"raw": "{\n\t\"name\": \"Alex\",\n    \"surname\": \"Bavta\",\n    \"email\": \"53111123d221manager@gmail.com\"\n    \n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -644,7 +644,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/orders",
+							"raw": "{{host}}/api/orders?start_day=2022-01-01&end_day=2022-03-01",
 							"host": [
 								"{{host}}"
 							],
@@ -736,6 +736,16 @@
 									"value": "",
 									"description": "filter by group",
 									"disabled": true
+								},
+								{
+									"key": "start_day",
+									"value": "2022-01-01",
+									"description": "filter by start day"
+								},
+								{
+									"key": "end_day",
+									"value": "2022-03-01",
+									"description": "filter by end day"
 								}
 							]
 						}
@@ -830,14 +840,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/orders/addComment/4",
+							"raw": "{{host}}/api/orders/сomment/4",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"addComment",
+								"сomment",
 								"4"
 							]
 						}
@@ -869,14 +879,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/orders/edit/5",
+							"raw": "{{host}}/api/orders/5",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"edit",
 								"5"
 							]
 						}
@@ -923,6 +932,67 @@
 						"body": {
 							"mode": "raw",
 							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/orders/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"groups"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "create-group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"april-2026\" \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
